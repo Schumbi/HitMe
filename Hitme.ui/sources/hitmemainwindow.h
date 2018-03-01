@@ -3,11 +3,14 @@
 
 #include <QMainWindow>
 
+#include "csensorstatus.h"
+
 namespace Ui {
 class HitmeMainWindow;
 }
 
-class CSensor;
+class CNetworkSensorInterface;
+class CSensorCtrlProcessor;
 
 class HitmeMainWindow : public QMainWindow {
 
@@ -15,14 +18,15 @@ class HitmeMainWindow : public QMainWindow {
 
 private:
     bool accEnabled;
-    CSensor *sensor1;
+    CNetworkSensorInterface *m_sensor1;
+    CSensorCtrlProcessor *m_ctrlProcessor;
 
 public:
     explicit HitmeMainWindow (QWidget *parent = 0);
     ~HitmeMainWindow();
 
 public slots:
-    void getStatusMessage (const QByteArray &data);
+    void getStatusMessage (const CSensorStatus& status);
 
 private slots:
     void activateMeasuring (bool);

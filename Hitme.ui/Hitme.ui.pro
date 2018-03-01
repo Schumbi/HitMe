@@ -26,11 +26,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         sources/main.cpp \
         sources/hitmemainwindow.cpp \
-		sources/csensor.cpp
+    sources/cabstractdataprocessor.cpp \
+    sources/csensorctrlprocessor.cpp \
+    sources/csensorstatus.cpp \
+    sources/cnetworksensorinterface.cpp
 
 HEADERS += \
         sources/hitmemainwindow.h \
-		sources/csensor.h
+    sources/cabstractdataprocessor.h \
+    sources/csensorctrlprocessor.h \
+    sources/csensorstatus.h \
+    sources/cnetworksensorinterface.h
 
 FORMS += \
         forms/hitmemainwindow.ui
