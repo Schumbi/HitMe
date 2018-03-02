@@ -14,7 +14,7 @@ class Server : public QThread {
     qint64 timeElapsed = 0;
     QElapsedTimer *tim;
 
-    QVector<accData> dataVec;
+    QVector<accDataConverter> dataVec;
     QUdpSocket *udpSocket;
     void processData (const QByteArray& data);
 

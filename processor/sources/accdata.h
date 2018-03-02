@@ -16,7 +16,7 @@ union conv16_t
     uint8_t  data8x2[2];
 };
 
-class accData {
+class accDataConverter {
 
     int16_t _x;
     int16_t _y;
@@ -27,8 +27,9 @@ class accData {
     int16_t transfromToData (uint16_t raw);
 
 public:
-    accData() {}
-    explicit accData (uint16_t rawx, uint16_t rawy, uint16_t rawz, uint32_t time)
+    accDataConverter() {}
+    explicit accDataConverter (uint16_t rawx, uint16_t rawy, uint16_t rawz,
+                               uint32_t time)
     {
         _x = transfromToData (rawx);
         _y = transfromToData (rawy);

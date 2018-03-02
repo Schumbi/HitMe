@@ -11,6 +11,7 @@ CSensorCtrlProcessor::CSensorCtrlProcessor (QObject *parent)
 bool CSensorCtrlProcessor::processData (const QByteArray &data,
                                         CSensorStatus &toFill)
 {
+    bool retVal = false;
     QString dataS (data);
     QRegularExpression reg ("^(\\{F0:\\d\\})(.*)");
 
@@ -37,7 +38,6 @@ bool CSensorCtrlProcessor::processData (const QByteArray &data,
             }
 
             toFill.set_state (state);
-            qDebug() << toFill;
         }
 
         if (msg.isNull() == false)
@@ -45,19 +45,11 @@ bool CSensorCtrlProcessor::processData (const QByteArray &data,
             toFill.set_message (msg);
         }
 
-        return true;
+        retVal = true;
     }
 
-    return false;
-}
+    qDebug() << toFill;
+    emit processedStatus (toFill);
 
-void CSensorCtrlProcessor::processDatagram (const QNetworkDatagram &netData)
-{
-    CSensorStatus status;
-    status.set_fromIp (netData. senderAddress().toString());
-
-    processData (netData.data(), status);
-
-    emit processedStatus (status);
-
+    return retVal;
 }

@@ -5,21 +5,28 @@
 #include <QUdpSocket>
 #include <QHostAddress>
 
+/*!
+ * \brief The CNetworkSensorInterface class
+ */
+
 class CNetworkSensorInterface : public QObject {
 
     Q_OBJECT
 
 private:
+    // network config
     QHostAddress m_sensorAdress;
+    quint32 m_ctrl_port;
+    quint32 m_data_port;
+
     QUdpSocket m_udpCtrl;
     QUdpSocket m_udpData;
 
 public:
     explicit CNetworkSensorInterface (const QHostAddress &sensorIP,
-                                      QObject *parent = nullptr);
-
-    static constexpr quint32 ctrl_port = 10001;
-    static constexpr quint32 data_port = 10000;
+                                      QObject *parent = nullptr,
+                                      quint32 ctrl_port = 10001,
+                                      quint32 data_port = 10000);
 
 private slots:
     void readCtrlFromSensor();

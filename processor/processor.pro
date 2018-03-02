@@ -22,3 +22,4 @@ SOURCES += sources/main.cpp \
 HEADERS += \
     sources/server.h \
     sources/accdata.h
+

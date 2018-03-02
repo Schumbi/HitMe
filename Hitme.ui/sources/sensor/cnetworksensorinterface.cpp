@@ -3,19 +3,29 @@
 #include <QNetworkDatagram>
 
 CNetworkSensorInterface::CNetworkSensorInterface (const QHostAddress &sensorIP,
-        QObject *parent) : QObject (parent), m_sensorAdress (sensorIP)
+        QObject *parent,
+        quint32 ctrl_port,
+        quint32 data_port)
+    : QObject (parent),
+      m_sensorAdress (sensorIP),
+      m_ctrl_port (ctrl_port),
+      m_data_port (data_port)
 {
-    m_udpCtrl.bind (QHostAddress::AnyIPv4, ctrl_port);
-    m_udpData.bind (QHostAddress::AnyIPv4, data_port);
+    // bind to any local adress and local port
+    m_udpCtrl.bind (QHostAddress::AnyIPv4, m_ctrl_port);
+    m_udpData.bind (QHostAddress::AnyIPv4, m_data_port);
 
+    // process ctrl data on arival
     connect (&m_udpCtrl, &QUdpSocket::readyRead, this,
              &CNetworkSensorInterface::readCtrlFromSensor);
 
+    // process acc data on arival
     connect (&m_udpData, &QUdpSocket::readyRead, this,
              &CNetworkSensorInterface::readDataFromSensor);
 
 }
 
+// process ctrl data on arival
 void CNetworkSensorInterface::readCtrlFromSensor()
 {
     while (m_udpCtrl.hasPendingDatagrams())
@@ -29,6 +39,7 @@ void CNetworkSensorInterface::readCtrlFromSensor()
     }
 }
 
+// process acc data on arival
 void CNetworkSensorInterface::readDataFromSensor()
 {
     while (m_udpData.hasPendingDatagrams())
@@ -42,9 +53,10 @@ void CNetworkSensorInterface::readDataFromSensor()
     }
 }
 
+// send a byte array to the sensor (should follow sensor format)
 void CNetworkSensorInterface::sendCommandToSensor (const QByteArray &data)
 {
     m_udpCtrl.writeDatagram (data, data.size(),
                              m_sensorAdress,
-                             ctrl_port);
+                             m_ctrl_port);
 }

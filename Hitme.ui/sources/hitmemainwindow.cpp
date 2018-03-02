@@ -1,8 +1,9 @@
 #include "hitmemainwindow.h"
 #include "ui_hitmemainwindow.h"
 
-#include "cnetworksensorinterface.h"
-#include "csensorctrlprocessor.h"
+#include "sensor/cnetworksensorinterface.h"
+#include "sensor/csensorctrlprocessor.h"
+#include "sensor/csensordataprocessor.h"
 
 HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     QMainWindow (parent), accEnabled (false),
@@ -11,17 +12,24 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     ui->setupUi (this);
 
     m_ctrlProcessor = new CSensorCtrlProcessor (this);
+    m_dataProcessor = new CSensorDataProcessor (this);
 
     m_sensor1 = new CNetworkSensorInterface (QHostAddress ("192.168.1.5"), this);
 
+    // connect Network to control processor
     connect (m_sensor1, &CNetworkSensorInterface::udp_Ctrl_received,
              m_ctrlProcessor, &CSensorCtrlProcessor::processDatagram);
 
-    connect (ui->pushButton_startstop, &QPushButton::clicked, this,
-             &HitmeMainWindow::activateMeasuring);
+    connect (m_sensor1, &CNetworkSensorInterface::udp_Data_received,
+             m_dataProcessor, &CSensorDataProcessor::processDatagram);
 
+    // output connection
     connect (m_ctrlProcessor, &CSensorCtrlProcessor::processedStatus,
              this, &HitmeMainWindow::getStatusMessage);
+
+    // inputs to sensors
+    connect (ui->pushButton_startstop, &QPushButton::clicked, this,
+             &HitmeMainWindow::activateMeasuring);
 
 }
 

@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "csensorstatus.h"
+#include "sensor/csensorstatus.h"
 
 namespace Ui {
 class HitmeMainWindow;
@@ -11,6 +11,7 @@ class HitmeMainWindow;
 
 class CNetworkSensorInterface;
 class CSensorCtrlProcessor;
+class CSensorDataProcessor;
 
 class HitmeMainWindow : public QMainWindow {
 
@@ -20,6 +21,7 @@ private:
     bool accEnabled;
     CNetworkSensorInterface *m_sensor1;
     CSensorCtrlProcessor *m_ctrlProcessor;
+    CSensorDataProcessor *m_dataProcessor;
 
 public:
     explicit HitmeMainWindow (QWidget *parent = 0);

@@ -36,7 +36,7 @@ void Server::processData (const QByteArray& data)
         conv16.data8x2[1] = data[ctr + 5];
         uint16_t rawz = conv16.data16x1;
 
-        auto d = accData (rawx, rawy, rawz, time);
+        auto d = accDataConverter (rawx, rawy, rawz, time);
         qDebug() << "diff PC: " << timeElapsed  << " diff MC: " <<
                  QString::number (diff / 1000.0, 'f', 0) <<  "bw:" <<
                  QString::number (

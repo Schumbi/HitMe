@@ -1,6 +1,6 @@
-#include "accdata.h"
+#include "caccdataconverter.h"
 
-int16_t accDataConverter::twoCompToDec (uint16_t in, uint8_t highestBit)
+int16_t CAccDataConverter::twoCompToDec (uint16_t in, uint8_t highestBit)
 {
     uint16_t erg = in;
 
@@ -13,7 +13,7 @@ int16_t accDataConverter::twoCompToDec (uint16_t in, uint8_t highestBit)
     return (int16_t)erg;
 }
 
-int16_t accDataConverter::transfromToData (uint16_t raw)
+int16_t CAccDataConverter::transfromToData (uint16_t raw)
 {
     conv16_t conv;
     conv.data16x1 = raw;

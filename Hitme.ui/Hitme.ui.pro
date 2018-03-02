@@ -22,21 +22,33 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+DEPENDPATH += . \
+     sensor
+
 
 SOURCES += \
-        sources/main.cpp \
-        sources/hitmemainwindow.cpp \
+    sources/main.cpp \
+    sources/hitmemainwindow.cpp \
     sources/cabstractdataprocessor.cpp \
-    sources/csensorctrlprocessor.cpp \
-    sources/csensorstatus.cpp \
-    sources/cnetworksensorinterface.cpp
+    sources/caccdisplay.cpp \
+    sources/sensor/csensorctrlprocessor.cpp \
+    sources/sensor/csensorstatus.cpp \
+    sources/sensor/cnetworksensorinterface.cpp \
+    sources/sensor/csensordata.cpp \
+    sources/sensor/csensordataprocessor.cpp \
+    sources/sensor/caccdataconverter.cpp
 
 HEADERS += \
-        sources/hitmemainwindow.h \
+    sources/hitmemainwindow.h \
     sources/cabstractdataprocessor.h \
-    sources/csensorctrlprocessor.h \
-    sources/csensorstatus.h \
-    sources/cnetworksensorinterface.h
+    sources/caccdisplay.h \
+    sources/sensor/csensorctrlprocessor.h \
+    sources/sensor/csensorstatus.h \
+    sources/sensor/cnetworksensorinterface.h \
+    sources/sensor/csensordata.h \
+    sources/sensor/csensordataprocessor.h \
+    sources/sensor/caccdataconverter.h
 
 FORMS += \
-        forms/hitmemainwindow.ui
+    forms/hitmemainwindow.ui \
+    forms/caccdisplay.ui
