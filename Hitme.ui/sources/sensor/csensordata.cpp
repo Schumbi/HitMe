@@ -29,12 +29,12 @@ quint32 CSensorData::id() const
 }
 
 CSensorData::CSensorData()
-    : QVector<QVector3D> (), m_startTime (0)
+    : QList<QVector3D> (), m_startTime (0)
 {
 }
 
 CSensorData::CSensorData (const CSensorData &other)
-    : QVector<QVector3D> (other)
+    : QList<QVector3D> (other)
 {
     m_startTime = other.m_startTime;
 }

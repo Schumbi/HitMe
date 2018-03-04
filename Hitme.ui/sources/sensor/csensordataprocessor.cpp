@@ -60,7 +60,6 @@ bool CSensorDataProcessor::processData (const QByteArray &data,
 
     toFill.set_message (QString ("{\"ret\":\"ACC data converted\"}"));
     toFill.set_state (CSensorStatus::OK);
-    qDebug() << accData;
 
     emit processedData (accData);
 

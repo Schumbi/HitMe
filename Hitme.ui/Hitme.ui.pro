@@ -36,7 +36,8 @@ SOURCES += \
     sources/sensor/csensordata.cpp \
     sources/sensor/csensordataprocessor.cpp \
     sources/sensor/caccdataconverter.cpp \
-    sources/calculators/cabstractcalculator.cpp
+    sources/calculators/cabstractcalculator.cpp \
+    sources/caccstorage.cpp
 
 HEADERS += \
     sources/gui/hitmemainwindow.h \
@@ -48,7 +49,8 @@ HEADERS += \
     sources/sensor/csensordata.h \
     sources/sensor/csensordataprocessor.h \
     sources/sensor/caccdataconverter.h \
-    sources/calculators/cabstractcalculator.h
+    sources/calculators/cabstractcalculator.h \
+    sources/caccstorage.h
 
 FORMS += \
     forms/hitmemainwindow.ui \

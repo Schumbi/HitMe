@@ -25,8 +25,17 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
              m_dataProcessor, &CSensorDataProcessor::processDatagram);
 
     // output connection
+    // genau hier müssen Daten nun intern im Buffer gespeichert werden
+    // als Speicher aller ankommenden Rohdaten
+    // von dort können die dann abgefragt werden, zur weiteren Verarbeitung
+    // Rohdaten speicher hält intern all Daten vor
+    // und gibt diese zusammenhängend als Vector zurück
+    // was passiert, wenn mal ein Paket verloren geht?
     connect (m_ctrlProcessor, &CSensorCtrlProcessor::processedStatus,
              this, &HitmeMainWindow::showStatusMessage);
+
+    QObject::connect (m_dataProcessor, &CSensorDataProcessor::processedData,
+                      &m_storage, &CAccStorage::append);
 
     // inputs to sensors
     connect (ui->pushButton_startstop, &QPushButton::clicked, this,

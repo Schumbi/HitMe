@@ -5,6 +5,7 @@
 
 #include <csensorstatus.h>
 #include <csensordata.h>
+#include "../caccstorage.h"
 
 namespace Ui {
 class HitmeMainWindow;
@@ -23,6 +24,7 @@ private:
     CNetworkSensorInterface *m_sensor1;
     CSensorCtrlProcessor *m_ctrlProcessor;
     CSensorDataProcessor *m_dataProcessor;
+    CAccStorage m_storage;
 
 public:
     explicit HitmeMainWindow (QWidget *parent = 0);

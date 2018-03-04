@@ -1,13 +1,13 @@
 #ifndef CSENSORDATA_H
 #define CSENSORDATA_H
 
-#include <QVector>
+#include <QList>
 #include <QVector3D>
 #include <QMetaType>
 
 #include <cstdint>
 
-class CSensorData : public QVector<QVector3D> {
+class CSensorData : public QList<QVector3D> {
 
 private:
     quint32 m_startTime;
