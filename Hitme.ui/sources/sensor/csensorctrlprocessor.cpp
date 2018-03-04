@@ -5,7 +5,7 @@
 #include <QRegularExpression>
 
 CSensorCtrlProcessor::CSensorCtrlProcessor (QObject *parent)
-    : CAbstractDataProcessor (parent)
+    : CAbstractNetworkProcessor (parent)
 {}
 
 bool CSensorCtrlProcessor::processData (const QByteArray &data,

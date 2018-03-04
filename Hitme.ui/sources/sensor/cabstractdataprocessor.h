@@ -4,18 +4,18 @@
 #include <QObject>
 #include <QNetworkDatagram>
 
-#include "sensor/csensordata.h"
-#include "sensor/csensorstatus.h"
+#include "csensordata.h"
+#include "csensorstatus.h"
 
 
-class CAbstractDataProcessor : public QObject {
+class CAbstractNetworkProcessor : public QObject {
 
     Q_OBJECT
 
     CSensorStatus m_sensorstatus;
 
 public:
-    explicit CAbstractDataProcessor (QObject *parent = nullptr);
+    explicit CAbstractNetworkProcessor (QObject *parent = nullptr);
 
     CSensorStatus sensorStatus();
 

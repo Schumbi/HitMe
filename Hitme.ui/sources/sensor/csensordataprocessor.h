@@ -1,9 +1,9 @@
 #ifndef CSENSORDATAPROCESSOR_H
 #define CSENSORDATAPROCESSOR_H
 
-#include "../cabstractdataprocessor.h"
+#include "cabstractdataprocessor.h"
 
-class CSensorDataProcessor : public CAbstractDataProcessor {
+class CSensorDataProcessor : public CAbstractNetworkProcessor {
 
     Q_OBJECT
 
@@ -13,7 +13,7 @@ public:
     virtual bool processData (const QByteArray& data, CSensorStatus &toFill);
 
 signals:
-    void processedData (CSensorData data);
+    void processedData (const CSensorData &data);
 
 };
 

@@ -1,9 +1,10 @@
 #include "hitmemainwindow.h"
 #include "ui_hitmemainwindow.h"
 
-#include "sensor/cnetworksensorinterface.h"
-#include "sensor/csensorctrlprocessor.h"
-#include "sensor/csensordataprocessor.h"
+#include <cnetworksensorinterface.h>
+#include <csensorctrlprocessor.h>
+#include <csensordataprocessor.h>
+#include "caccdisplay.h"
 
 HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     QMainWindow (parent), accEnabled (false),
@@ -25,7 +26,7 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
 
     // output connection
     connect (m_ctrlProcessor, &CSensorCtrlProcessor::processedStatus,
-             this, &HitmeMainWindow::getStatusMessage);
+             this, &HitmeMainWindow::showStatusMessage);
 
     // inputs to sensors
     connect (ui->pushButton_startstop, &QPushButton::clicked, this,
@@ -41,11 +42,16 @@ HitmeMainWindow::~HitmeMainWindow()
     delete  m_sensor1;
 }
 
-void HitmeMainWindow::getStatusMessage (const CSensorStatus& status)
+void HitmeMainWindow::showStatusMessage (const CSensorStatus& status)
 {
     ui->label_sensorIP->setText (status.fromIp());
     ui->checkBox_isOnline->setChecked (status.state() == CSensorStatus::OK);
     ui->lineEdit_answer->setText (status.message());
+}
+
+void HitmeMainWindow::showAccData (const CSensorData &data)
+{
+    // do something with data here
 }
 
 void HitmeMainWindow::activateMeasuring (bool val)

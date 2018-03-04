@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 
-#include "sensor/csensorstatus.h"
+#include <csensorstatus.h>
+#include <csensordata.h>
 
 namespace Ui {
 class HitmeMainWindow;
@@ -28,7 +29,8 @@ public:
     ~HitmeMainWindow();
 
 public slots:
-    void getStatusMessage (const CSensorStatus& status);
+    void showStatusMessage (const CSensorStatus& status);
+    void showAccData (const CSensorData& data);
 
 private slots:
     void activateMeasuring (bool);

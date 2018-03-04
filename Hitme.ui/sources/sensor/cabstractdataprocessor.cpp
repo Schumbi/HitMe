@@ -1,15 +1,16 @@
 #include "cabstractdataprocessor.h"
 
-CAbstractDataProcessor::CAbstractDataProcessor (QObject *parent) : QObject (
+CAbstractNetworkProcessor::CAbstractNetworkProcessor (QObject *parent) :
+    QObject (
         parent)
 {}
 
-CSensorStatus CAbstractDataProcessor::sensorStatus()
+CSensorStatus CAbstractNetworkProcessor::sensorStatus()
 {
     return m_sensorstatus;
 }
 
-void CAbstractDataProcessor::processDatagram (const QNetworkDatagram &data)
+void CAbstractNetworkProcessor::processDatagram (const QNetworkDatagram &data)
 {
 
     m_sensorstatus.set_fromIp (data.senderAddress().toString());

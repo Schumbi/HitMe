@@ -57,8 +57,10 @@ QString CSensorStatus::message() const
 
 QDebug operator<< (QDebug dbg, const CSensorStatus &sensorStatus)
 {
-    dbg.nospace() << "CSensorStatus()" << sensorStatus.fromIp() <<
-                  sensorStatus.state() << sensorStatus.message();
+    dbg.nospace() << "CSensorStatus() from IP:" << sensorStatus.fromIp()
+                  << " state: " << (sensorStatus.state() == CSensorStatus::e_sensorstate::OK ?
+                                    "OK" : "NOK" )
+                  << " msg: " << sensorStatus.message();
     return dbg.maybeSpace();
 }
 

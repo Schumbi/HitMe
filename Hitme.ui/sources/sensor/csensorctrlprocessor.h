@@ -1,9 +1,9 @@
 #ifndef CSENSORCTRLPROCESSOR_H
 #define CSENSORCTRLPROCESSOR_H
 
-#include "../cabstractdataprocessor.h"
+#include "cabstractdataprocessor.h"
 
-class CSensorCtrlProcessor : public CAbstractDataProcessor {
+class CSensorCtrlProcessor : public CAbstractNetworkProcessor {
 
     Q_OBJECT
 
