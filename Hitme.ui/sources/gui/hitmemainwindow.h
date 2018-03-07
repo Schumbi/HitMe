@@ -12,8 +12,9 @@ class HitmeMainWindow;
 }
 
 class CNetworkSensorInterface;
-class CSensorCtrlProcessor;
-class CSensorDataProcessor;
+class CSensorCtrlTransceiver;
+class CSensorDataReceiver;
+class CAccDisplay;
 
 class HitmeMainWindow : public QMainWindow {
 
@@ -22,9 +23,10 @@ class HitmeMainWindow : public QMainWindow {
 private:
     bool accEnabled;
     CNetworkSensorInterface *m_sensor1;
-    CSensorCtrlProcessor *m_ctrlProcessor;
-    CSensorDataProcessor *m_dataProcessor;
+    CSensorCtrlTransceiver *m_ctrlProcessor;
+    CSensorDataReceiver *m_dataProcessor;
     CAccStorage m_storage;
+    CAccDisplay *m_accdisplay;
 
 public:
     explicit HitmeMainWindow (QWidget *parent = 0);
@@ -32,10 +34,10 @@ public:
 
 public slots:
     void showStatusMessage (const CSensorStatus& status);
-    void showAccData (const CSensorData& data);
 
 private slots:
     void activateMeasuring (bool);
+    void showData (quint64 pkg);
 
 
 private:

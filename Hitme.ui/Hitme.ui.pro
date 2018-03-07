@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network 3drender
+QT       += core gui network charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -30,28 +30,27 @@ SOURCES += \
     sources/gui/hitmemainwindow.cpp \
     sources/gui/caccdisplay.cpp \
     sources/sensor/cabstractdataprocessor.cpp \
-    sources/sensor/csensorctrlprocessor.cpp \
     sources/sensor/csensorstatus.cpp \
     sources/sensor/cnetworksensorinterface.cpp \
     sources/sensor/csensordata.cpp \
-    sources/sensor/csensordataprocessor.cpp \
     sources/sensor/caccdataconverter.cpp \
     sources/calculators/cabstractcalculator.cpp \
-    sources/caccstorage.cpp
+    sources/caccstorage.cpp \
+    sources/sensor/csensordatareceiver.cpp \
+    sources/sensor/csensorctrltransceiver.cpp
 
 HEADERS += \
     sources/gui/hitmemainwindow.h \
     sources/gui/caccdisplay.h \
     sources/sensor/cabstractdataprocessor.h \
-    sources/sensor/csensorctrlprocessor.h \
     sources/sensor/csensorstatus.h \
     sources/sensor/cnetworksensorinterface.h \
     sources/sensor/csensordata.h \
-    sources/sensor/csensordataprocessor.h \
     sources/sensor/caccdataconverter.h \
     sources/calculators/cabstractcalculator.h \
-    sources/caccstorage.h
+    sources/caccstorage.h \
+    sources/sensor/csensordatareceiver.h \
+    sources/sensor/csensorctrltransceiver.h
 
 FORMS += \
-    forms/hitmemainwindow.ui \
-    forms/caccdisplay.ui
+    forms/hitmemainwindow.ui

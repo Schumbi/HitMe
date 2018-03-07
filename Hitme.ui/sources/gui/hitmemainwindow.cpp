@@ -2,9 +2,11 @@
 #include "ui_hitmemainwindow.h"
 
 #include <cnetworksensorinterface.h>
-#include <csensorctrlprocessor.h>
-#include <csensordataprocessor.h>
+#include <csensordatareceiver.h>
+#include <csensorctrltransceiver.h>
 #include "caccdisplay.h"
+
+#include <QLayout>
 
 HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     QMainWindow (parent), accEnabled (false),
@@ -12,30 +14,32 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
 {
     ui->setupUi (this);
 
-    m_ctrlProcessor = new CSensorCtrlProcessor (this);
-    m_dataProcessor = new CSensorDataProcessor (this);
+    m_accdisplay = new CAccDisplay ();
+    QBoxLayout* layout = new QBoxLayout (QBoxLayout::LeftToRight) ;
+    layout->addWidget (m_accdisplay);
+    ui->accdata->setLayout (layout);
 
-    m_sensor1 = new CNetworkSensorInterface (QHostAddress ("192.168.1.5"), this);
+    m_ctrlProcessor = new CSensorCtrlTransceiver (this);
+    m_dataProcessor = new CSensorDataReceiver (this);
+
+    m_sensor1 = new CNetworkSensorInterface (QHostAddress ("192.168.1.7"), this);
 
     // connect Network to control processor
     connect (m_sensor1, &CNetworkSensorInterface::udp_Ctrl_received,
-             m_ctrlProcessor, &CSensorCtrlProcessor::processDatagram);
+             m_ctrlProcessor, &CSensorCtrlTransceiver::processDatagram);
 
     connect (m_sensor1, &CNetworkSensorInterface::udp_Data_received,
-             m_dataProcessor, &CSensorDataProcessor::processDatagram);
+             m_dataProcessor, &CSensorDataReceiver::processDatagram);
 
     // output connection
-    // genau hier müssen Daten nun intern im Buffer gespeichert werden
-    // als Speicher aller ankommenden Rohdaten
-    // von dort können die dann abgefragt werden, zur weiteren Verarbeitung
-    // Rohdaten speicher hält intern all Daten vor
-    // und gibt diese zusammenhängend als Vector zurück
-    // was passiert, wenn mal ein Paket verloren geht?
-    connect (m_ctrlProcessor, &CSensorCtrlProcessor::processedStatus,
+    connect (m_ctrlProcessor, &CSensorCtrlTransceiver::processedStatus,
              this, &HitmeMainWindow::showStatusMessage);
 
-    QObject::connect (m_dataProcessor, &CSensorDataProcessor::processedData,
-                      &m_storage, &CAccStorage::append);
+    connect (m_dataProcessor, &CSensorDataReceiver::processedData,
+             &m_storage, &CAccStorage::append);
+
+    connect (&m_storage, &CAccStorage::gotPacket,
+             this, &HitmeMainWindow::showData);
 
     // inputs to sensors
     connect (ui->pushButton_startstop, &QPushButton::clicked, this,
@@ -58,11 +62,6 @@ void HitmeMainWindow::showStatusMessage (const CSensorStatus& status)
     ui->lineEdit_answer->setText (status.message());
 }
 
-void HitmeMainWindow::showAccData (const CSensorData &data)
-{
-    // do something with data here
-}
-
 void HitmeMainWindow::activateMeasuring (bool val)
 {
     Q_UNUSED (val);
@@ -79,4 +78,10 @@ void HitmeMainWindow::activateMeasuring (bool val)
         QString startstop ("{0:0}");
         m_sensor1->sendCommandToSensor (startstop.toLocal8Bit());
     }
+}
+
+void HitmeMainWindow::showData (quint64 pkg)
+{
+    Q_UNUSED (pkg);
+    m_accdisplay->setData (m_storage.storage());
 }

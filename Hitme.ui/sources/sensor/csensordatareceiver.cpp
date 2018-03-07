@@ -1,14 +1,13 @@
-#include "csensordataprocessor.h"
+#include "csensordatareceiver.h"
 #include "caccdataconverter.h"
 
-CSensorDataProcessor::CSensorDataProcessor (QObject *parent)
+CSensorDataReceiver::CSensorDataReceiver (QObject *parent)
     : CAbstractNetworkProcessor (parent)
 {
-
 }
 
-bool CSensorDataProcessor::processData (const QByteArray &data,
-                                        CSensorStatus &toFill)
+bool CSensorDataReceiver::processData (const QByteArray &data,
+                                       CSensorStatus &toFill)
 {
     CAccDataConverter::conv32_t conv32;
     CAccDataConverter::conv16_t conv16;
@@ -43,7 +42,7 @@ bool CSensorDataProcessor::processData (const QByteArray &data,
     accData.setId (conv32.val32x1);
 
     // extract data
-    for (int ctr = 8; ctr < (data.size() - 6); ctr += 6)
+    for (int ctr = 12; ctr < (data.size() - 6); ctr += 6)
     {
         conv16.data8x2[0] = data[ctr + 0];
         conv16.data8x2[1] = data[ctr + 1];

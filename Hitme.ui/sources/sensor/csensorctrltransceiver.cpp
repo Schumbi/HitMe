@@ -1,15 +1,15 @@
-#include "csensorctrlprocessor.h"
+#include "csensorctrltransceiver.h"
 
 #include "csensorstatus.h"
 
 #include <QRegularExpression>
 
-CSensorCtrlProcessor::CSensorCtrlProcessor (QObject *parent)
+CSensorCtrlTransceiver::CSensorCtrlTransceiver (QObject *parent)
     : CAbstractNetworkProcessor (parent)
 {}
 
-bool CSensorCtrlProcessor::processData (const QByteArray &data,
-                                        CSensorStatus &toFill)
+bool CSensorCtrlTransceiver::processData (const QByteArray &data,
+        CSensorStatus &toFill)
 {
     bool retVal = false;
     QString dataS (data);

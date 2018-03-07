@@ -15,6 +15,7 @@ class CAccStorage : public QObject {
 
     data_t m_storage;
 
+    quint64 m_packetCtr;
     double m_meanPeriod;
     double m_maxdiff;
     double m_mindiff;
@@ -28,8 +29,11 @@ public:
     double maxdiff() const;
     double mindiff() const;
     double size() const;
+    quint64 packetCount() const;
+    data_t storage() const;
 
 signals:
+    void gotPacket (quint64 packetCtr);
 
 public slots:
     void append (const CSensorData& newdata);

@@ -4,7 +4,12 @@
 #include <QDebug>
 
 CAccStorage::CAccStorage (QObject *parent) : QObject (parent)
-{}
+{
+    m_meanPeriod = 0;
+    m_packetCtr = 0;
+    m_maxdiff = 0;
+    m_mindiff = 0;
+}
 
 void CAccStorage::append (const CSensorData &newdata)
 {
@@ -13,29 +18,24 @@ void CAccStorage::append (const CSensorData &newdata)
     auto total = newdata.size();
     double period = (end - start) / static_cast<double> (total);
 
-    if (m_storage.size() == 0)
+    m_packetCtr++;
+    m_meanPeriod += period;
+
+    if (m_packetCtr > 1)
     {
-        m_meanPeriod = period;
+        m_meanPeriod /= 2;
+    }
+
+    if (m_packetCtr <= 50)
+    {
         m_mindiff = 0.0;
         m_maxdiff = 0.0;
     }
     else
     {
-        double newPeriod = period;
-
-        if (newPeriod > m_meanPeriod)
-        {
-            double c = newPeriod - m_meanPeriod;
-            m_maxdiff = qMax (m_maxdiff, c);
-        }
-
-        if (newPeriod < m_meanPeriod)
-        {
-            double c = newPeriod - m_meanPeriod;
-            m_mindiff = qMin (m_mindiff, c);
-        }
-
-        m_meanPeriod =  newPeriod;
+        double c = period - m_meanPeriod;
+        m_maxdiff = qMax (m_maxdiff, c);
+        m_mindiff = qMin (m_mindiff, c);
     }
 
     for (int ctr = 0; ctr < total; ctr++)
@@ -44,7 +44,8 @@ void CAccStorage::append (const CSensorData &newdata)
         m_storage.append (datum);
     }
 
-    qDebug() << *this;
+    // qDebug() << *this;
+    emit gotPacket (m_packetCtr - 1);
 }
 
 data_t CAccStorage::get (uint32_t startTime, uint32_t endTime)
@@ -91,13 +92,24 @@ double CAccStorage::size() const
     return m_storage.size();
 }
 
+quint64 CAccStorage::packetCount() const
+{
+    return m_packetCtr;
+}
+
+data_t CAccStorage::storage() const
+{
+    return m_storage;
+}
+
 QDebug operator<< (QDebug dbg, const CAccStorage &data)
 {
     dbg.nospace() << "CAccStorage(): timing: "
-                  << " mean:    " << data.meanPeriod()
+                  << " mean: " << data.meanPeriod()
                   << " mindiff: " << data.mindiff()
                   << " maxdiff: " << data.maxdiff()
-                  << " size   : " << data.size();
+                  << " size   : " << data.size()
+                  << " pcnt   :" << data.packetCount();
     dbg.maybeSpace();
     return dbg;
 }

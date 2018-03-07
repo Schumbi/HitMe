@@ -23,6 +23,15 @@ CNetworkSensorInterface::CNetworkSensorInterface (const QHostAddress &sensorIP,
     connect (&m_udpData, &QUdpSocket::readyRead, this,
              &CNetworkSensorInterface::readDataFromSensor);
 
+    QString end ("{0:0}");
+    sendCommandToSensor (end.toLatin1());
+}
+
+CNetworkSensorInterface::~CNetworkSensorInterface()
+{
+    QString end ("{0:0}");
+    sendCommandToSensor (end.toLatin1());
+    readCtrlFromSensor();
 }
 
 // process ctrl data on arival
@@ -54,9 +63,9 @@ void CNetworkSensorInterface::readDataFromSensor()
 }
 
 // send a byte array to the sensor (should follow sensor format)
-void CNetworkSensorInterface::sendCommandToSensor (const QByteArray &data)
+bool CNetworkSensorInterface::sendCommandToSensor (const QByteArray &data)
 {
-    m_udpCtrl.writeDatagram (data, data.size(),
-                             m_sensorAdress,
-                             m_ctrl_port);
+    return -1 != m_udpCtrl.writeDatagram (data, data.size(),
+                                          m_sensorAdress,
+                                          m_ctrl_port);
 }

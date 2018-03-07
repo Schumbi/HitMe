@@ -27,6 +27,7 @@ public:
                                       QObject *parent = nullptr,
                                       quint32 ctrl_port = 10001,
                                       quint32 data_port = 10000);
+    ~CNetworkSensorInterface();
 
 private slots:
     void readCtrlFromSensor();

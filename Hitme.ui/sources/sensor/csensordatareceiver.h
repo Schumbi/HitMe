@@ -3,12 +3,12 @@
 
 #include "cabstractdataprocessor.h"
 
-class CSensorDataProcessor : public CAbstractNetworkProcessor {
+class CSensorDataReceiver: public CAbstractNetworkProcessor {
 
     Q_OBJECT
 
 public:
-    CSensorDataProcessor (QObject *parent = nullptr);
+    CSensorDataReceiver (QObject *parent = nullptr);
 
     virtual bool processData (const QByteArray& data, CSensorStatus &toFill);
 
