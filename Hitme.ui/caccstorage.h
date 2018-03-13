@@ -20,10 +20,14 @@ class CAccStorage : public QObject {
     double m_maxdiff;
     double m_mindiff;
 
+    void processNewData (const CSensorData& newdata);
+
 public:
     explicit CAccStorage (QObject *parent = nullptr);
 
     data_t get (uint32_t startTime, uint32_t endTime);
+
+    quint64 addRawData (const QByteArray& newdata);
 
     double meanPeriod() const;
     double maxdiff() const;
@@ -32,11 +36,6 @@ public:
     quint64 packetCount() const;
     data_t storage() const;
 
-signals:
-    void gotPacket (quint64 packetCtr);
-
-public slots:
-    void append (const CSensorData& newdata);
 };
 
 QDebug operator<< (QDebug dbg, const CAccStorage &data);

@@ -1,5 +1,4 @@
 #include "caccdisplay.h"
-#include "ui_caccdisplay.h"
 
 #include <QDebug>
 
@@ -7,6 +6,7 @@
 #include <QtCharts/QSplineSeries>
 #include <QtCharts/QScatterSeries>
 #include <QtCharts/QValueAxis>
+#include <QVBoxLayout>
 
 QT_CHARTS_USE_NAMESPACE
 

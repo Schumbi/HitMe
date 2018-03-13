@@ -22,35 +22,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-INCLUDEPATH += $$PWD/sources/sensor $$PWD/sources/gui $$PWD/sources/calculators
+INCLUDEPATH += $$PWD/gui \
+               $$PWD/../sensor/src
 
 
 SOURCES += \
-    sources/main.cpp \
-    sources/gui/hitmemainwindow.cpp \
-    sources/gui/caccdisplay.cpp \
-    sources/sensor/cabstractdataprocessor.cpp \
-    sources/sensor/csensorstatus.cpp \
-    sources/sensor/cnetworksensorinterface.cpp \
-    sources/sensor/csensordata.cpp \
-    sources/sensor/caccdataconverter.cpp \
-    sources/calculators/cabstractcalculator.cpp \
-    sources/caccstorage.cpp \
-    sources/sensor/csensordatareceiver.cpp \
-    sources/sensor/csensorctrltransceiver.cpp
+    main.cpp \
+    gui/hitmemainwindow.cpp \
+    gui/caccdisplay.cpp \
+    csensor.cpp \
+    csensorprivate.cpp \
+    csensordata.cpp \
+    caccstorage.cpp \
+    caccdataconverter.cpp
 
 HEADERS += \
-    sources/gui/hitmemainwindow.h \
-    sources/gui/caccdisplay.h \
-    sources/sensor/cabstractdataprocessor.h \
-    sources/sensor/csensorstatus.h \
-    sources/sensor/cnetworksensorinterface.h \
-    sources/sensor/csensordata.h \
-    sources/sensor/caccdataconverter.h \
-    sources/calculators/cabstractcalculator.h \
-    sources/caccstorage.h \
-    sources/sensor/csensordatareceiver.h \
-    sources/sensor/csensorctrltransceiver.h
+    gui/hitmemainwindow.h \
+    gui/caccdisplay.h \
+    csensor.h \
+    csensorprivate.h \
+    csensorconfig.h \
+    csensordata.h \
+    caccdataconverter.h \
+    caccstorage.h
 
 FORMS += \
     forms/hitmemainwindow.ui

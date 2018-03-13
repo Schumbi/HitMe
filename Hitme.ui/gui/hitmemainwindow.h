@@ -3,17 +3,13 @@
 
 #include <QMainWindow>
 
-#include <csensorstatus.h>
 #include <csensordata.h>
-#include "../caccstorage.h"
+#include "../csensor.h"
 
 namespace Ui {
 class HitmeMainWindow;
 }
 
-class CNetworkSensorInterface;
-class CSensorCtrlTransceiver;
-class CSensorDataReceiver;
 class CAccDisplay;
 
 class HitmeMainWindow : public QMainWindow {
@@ -22,23 +18,20 @@ class HitmeMainWindow : public QMainWindow {
 
 private:
     bool accEnabled;
-    CNetworkSensorInterface *m_sensor1;
-    CSensorCtrlTransceiver *m_ctrlProcessor;
-    CSensorDataReceiver *m_dataProcessor;
-    CAccStorage m_storage;
+
+    sensor::CSensor* m_sensor1;
+
     CAccDisplay *m_accdisplay;
 
 public:
     explicit HitmeMainWindow (QWidget *parent = 0);
     ~HitmeMainWindow();
 
+
 public slots:
-    void showStatusMessage (const CSensorStatus& status);
 
 private slots:
-    void activateMeasuring (bool);
-    void showData (quint64 pkg);
-
+    void statusUpdate();
 
 private:
     Ui::HitmeMainWindow *ui;
