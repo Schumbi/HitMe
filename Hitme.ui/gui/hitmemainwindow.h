@@ -18,9 +18,7 @@ class HitmeMainWindow : public QMainWindow {
 
 private:
     bool accEnabled;
-
     sensor::CSensor* m_sensor1;
-
     CAccDisplay *m_accdisplay;
 
 public:
@@ -30,8 +28,16 @@ public:
 
 public slots:
 
-private slots:
+protected slots:
+    void deleteMessages();
     void statusUpdate();
+
+private slots:
+    void on_pushButton_startstop_clicked();
+
+    void on_comboBox_sensitivity_currentIndexChanged (int index);
+
+    void on_comboBox_bandwidth_currentIndexChanged (int index);
 
 private:
     Ui::HitmeMainWindow *ui;

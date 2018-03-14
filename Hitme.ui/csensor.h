@@ -37,10 +37,15 @@ public:
     QString ip();
     bool isOnline();
     bool isBMAOk();
+    bool sensorStarted();
+    QString sensorMsg();
+    QString sensorErr();
+    void deleteMessages();
 
 public slots:
     bool setGRange (GRange_e val);
     bool setBandWidth (BandWidth_e val);
+    void setStarted (bool start);
 
 signals:
     void rangeChange (GRange_e range);

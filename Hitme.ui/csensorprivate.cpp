@@ -39,6 +39,8 @@ bool CSensorPrivate::reconnect()
 {
     bool bound;
 
+    m_startSensor = false;
+
     // reconnect udp control socket
     if (m_controlSocket->isOpen())
     {
@@ -117,6 +119,7 @@ BMA020BANDWIDTH CSensorPrivate::bw() const
 void CSensorPrivate::setBW (BMA020BANDWIDTH val)
 {
     m_bandwidth = val;
+    createCtrlPackage();
 }
 
 BMA020RANGE CSensorPrivate::range() const
@@ -127,6 +130,18 @@ BMA020RANGE CSensorPrivate::range() const
 void CSensorPrivate::setRange (BMA020RANGE val)
 {
     m_range = val;
+    createCtrlPackage();
+}
+
+bool CSensorPrivate::startedSensor() const
+{
+    return m_startSensor;
+}
+
+void CSensorPrivate::setStartSensor (bool start)
+{
+    m_startSensor = start;
+    createCtrlPackage();
 }
 
 bool CSensorPrivate::tryReconnect (const QString &ip)
@@ -143,6 +158,52 @@ bool CSensorPrivate::isConnected() const
 bool CSensorPrivate::isBMAreadable()
 {
     return m_bmaReadable;
+}
+
+QString CSensorPrivate::lastErr()
+{
+    return m_errMsg;
+}
+
+QString CSensorPrivate::lastMsg()
+{
+    return m_msg;
+}
+
+void CSensorPrivate::deleteMessages()
+{
+    if (lastErr().isEmpty() == false)
+    {
+        lastErr().clear();
+        return;
+    }
+
+    if (lastMsg().isEmpty() == false)
+    {
+        lastMsg().clear();
+        return;
+    }
+}
+
+void CSensorPrivate::createCtrlPackage()
+{
+    QJsonObject o;
+    o[JKEY_type] = MSGTYPE::REQUEST;
+    o[JKEY_range] = static_cast<int> (this->range());
+    o[JKEY_bandwidth] = static_cast<int> (this->bw());
+    o[JKEY_start] = static_cast<bool> (this->startedSensor());
+    o[JKEY_cmd] = static_cast<int> (-1);
+
+    QByteArray ar = QJsonDocument (o).toJson (QJsonDocument::Compact);
+    sendCtrlPkg (ar);
+}
+
+void CSensorPrivate::sendCtrlPkg (const QByteArray& data)
+{
+    QNetworkDatagram datagram;
+    datagram.setDestination (QHostAddress (ip()), m_controlPort);
+    datagram.setData (data);
+    m_dataSocket->writeDatagram (datagram);
 }
 
 bool CSensorPrivate::processStatusMessage (const QJsonObject &o)
@@ -196,13 +257,6 @@ bool CSensorPrivate::processAnswer (const QJsonObject &o)
     if (parsable)
     {
         m_answer_cmd = val.toString ("");
-    }
-
-    parsable &= tryGetValue (JKEY_arg, val, o);
-
-    if (parsable)
-    {
-        m_answer_cmd_arg = val.toString ("");
     }
 
     parsable &= tryGetValue (JKEY_err, val, o);

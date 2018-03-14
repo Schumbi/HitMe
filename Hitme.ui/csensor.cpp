@@ -73,6 +73,26 @@ bool CSensor::isBMAOk()
     return d->isBMAreadable();
 }
 
+bool CSensor::sensorStarted()
+{
+    return d->startedSensor();
+}
+
+QString CSensor::sensorMsg()
+{
+    return d->lastMsg();
+}
+
+QString CSensor::sensorErr()
+{
+    return d->lastErr();
+}
+
+void CSensor::deleteMessages()
+{
+    d->deleteMessages();
+}
+
 bool CSensor::setGRange (GRange_e val)
 {
     bool suc = true;
@@ -129,6 +149,11 @@ bool CSensor::setBandWidth (BandWidth_e val)
     }
 
     return suc;
+}
+
+void CSensor::setStarted (bool start)
+{
+    d->setStartSensor (start);
 }
 
 }

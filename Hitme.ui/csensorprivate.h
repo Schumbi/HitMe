@@ -33,13 +33,23 @@ public:
     // sensors sensitivity
     BMA020RANGE range() const;
     void setRange (BMA020RANGE val);
+    // start sensor
+    bool startedSensor() const;
+    void setStartSensor (bool start);
     // connect to the sensor and return succes
     bool tryReconnect (const QString& ip);
     // get connection state
     bool isConnected() const;
     // return status of BMA
     bool isBMAreadable();
-
+    // last error message
+    QString lastErr();
+    // last message
+    QString lastMsg();
+    // delete all messages
+    void deleteMessages();
+    // create a package
+    void createCtrlPackage();
 signals:
     void connected (bool bound);
     void ctrlParseError (const QString &err);
@@ -59,6 +69,7 @@ private:
     quint32 m_dataPort;
     // millis on controller
     quint32 m_millis;
+    bool m_startSensor;
     // connection state
     bool m_connected;
     // sensor specific data
@@ -82,6 +93,8 @@ private:
     bool processStatusMessage (const QJsonObject& o);
     // process sensors answer
     bool processAnswer (const QJsonObject& o);
+    // send commands to sensor
+    void sendCtrlPkg (const QByteArray& data);
 
 public slots:
     // readyRead ctrl
