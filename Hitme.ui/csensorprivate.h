@@ -50,6 +50,9 @@ public:
     void deleteMessages();
     // create a package
     void createCtrlPackage();
+    // return last data from count to end
+    data_t getLastValues (int count);
+
 signals:
     void connected (bool bound);
     void ctrlParseError (const QString &err);

@@ -11,6 +11,7 @@ CAccStorage::CAccStorage (QObject *parent) : QObject (parent)
     m_packetCtr = 0;
     m_maxdiff = 0;
     m_mindiff = 0;
+    m_storage.reserve (1000 * 60 * 10);
 }
 
 void CAccStorage::processNewData (const CSensorData &newdata)
@@ -102,6 +103,21 @@ quint64 CAccStorage::packetCount() const
 data_t CAccStorage::storage() const
 {
     return m_storage;
+}
+
+data_t CAccStorage::getLastValues (int count) const
+{
+    data_t res;
+    res.reserve (count);
+
+    int cnt = m_storage.size() < count ? 0 : m_storage.size() - count;
+
+    for (; cnt < m_storage.size(); cnt++)
+    {
+        res.append (m_storage[cnt]);
+    }
+
+    return res;
 }
 
 quint64 CAccStorage::addRawData (const QByteArray &data)

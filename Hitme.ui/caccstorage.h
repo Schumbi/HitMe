@@ -35,6 +35,8 @@ public:
     double size() const;
     quint64 packetCount() const;
     data_t storage() const;
+    data_t getLastValues (int count) const;
+
 
 };
 

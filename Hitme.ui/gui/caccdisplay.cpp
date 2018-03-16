@@ -55,6 +55,10 @@ CAccDisplay::~CAccDisplay()
 
 void CAccDisplay::setData (const data_t &data)
 {
+    if (data.size() == 0)
+    {
+        return;
+    }
 
     int start = data.size() < c_datacnt ? 0 : data.size() - c_datacnt;
     int size = data.size() < c_datacnt ? data.size() : c_datacnt;

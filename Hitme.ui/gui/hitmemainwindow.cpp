@@ -19,12 +19,27 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     layout->addWidget (m_accdisplay);
     ui->accdata->setLayout (layout);
 
+    enableUIInput (false);
+    ui->pushButton_startstop->setText (QString ("Start"));
+
     m_sensor1 = new sensor::CSensor (sensor::CSensorConfig (
-                                         QString ("192.168.1.5")), this);
+                                         QString ("192.168.1.7")), this);
+    m_sensor1->setStarted (false);
+
     connect (m_sensor1, SIGNAL (statusUpdate()),
              this, SLOT (statusUpdate()));
 
     statusUpdate();
+
+    connect (&updateTimer, &QTimer::timeout,
+             this, &HitmeMainWindow::updateUI);
+
+    connect (ui->checkBox_isOnline, &QCheckBox::stateChanged,
+             this, &HitmeMainWindow::enableUIInput);
+
+    updateTimer.setInterval (250);
+    valuesToShow = 1000;
+    updateTimer.start();
 }
 
 HitmeMainWindow::~HitmeMainWindow()
@@ -73,20 +88,28 @@ void HitmeMainWindow::statusUpdate()
     ui->checkBox_isOnline->setCheckState (checked);
 }
 
+
+void HitmeMainWindow::updateUI()
+{
+    if (accEnabled)
+    {
+        data_t toShow = m_sensor1->getLastValues (valuesToShow);
+        m_accdisplay->setData (toShow);
+    }
+}
+
 void HitmeMainWindow::on_pushButton_startstop_clicked()
 {
-    bool started = m_sensor1->sensorStarted();
-    m_sensor1->setStarted (!started);
+    accEnabled = !accEnabled;
+    m_sensor1->setStarted (accEnabled);
 
-    started = m_sensor1->sensorStarted();
-
-    if (started)
+    if (accEnabled)
     {
-        ui->pushButton_startstop->setText (QString ("started"));
+        ui->pushButton_startstop->setText (QString ("Stop"));
     }
     else
     {
-        ui->pushButton_startstop->setText (QString ("stoped"));
+        ui->pushButton_startstop->setText (QString ("Start"));
     }
 }
 
@@ -98,4 +121,11 @@ void HitmeMainWindow::on_comboBox_sensitivity_currentIndexChanged (int index)
 void HitmeMainWindow::on_comboBox_bandwidth_currentIndexChanged (int index)
 {
     m_sensor1->setBandWidth (static_cast<sensor::BandWidth_e> (index));
+}
+
+void HitmeMainWindow::enableUIInput (bool enable)
+{
+    ui->pushButton_startstop->setEnabled (enable);
+    ui->comboBox_bandwidth->setEnabled (enable);
+    ui->comboBox_sensitivity->setEnabled (enable);
 }

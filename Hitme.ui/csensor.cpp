@@ -93,6 +93,11 @@ void CSensor::deleteMessages()
     d->deleteMessages();
 }
 
+data_t CSensor::getLastValues (int count)
+{
+    return d->getLastValues (count);
+}
+
 bool CSensor::setGRange (GRange_e val)
 {
     bool suc = true;

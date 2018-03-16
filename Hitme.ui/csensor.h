@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "csensorconfig.h"
+#include "caccstorage.h"
 
 namespace sensor {
 
@@ -41,6 +42,7 @@ public:
     QString sensorMsg();
     QString sensorErr();
     void deleteMessages();
+    data_t getLastValues (int count);
 
 public slots:
     bool setGRange (GRange_e val);

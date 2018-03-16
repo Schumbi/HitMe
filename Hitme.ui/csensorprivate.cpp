@@ -142,6 +142,13 @@ void CSensorPrivate::setStartSensor (bool start)
 {
     m_startSensor = start;
     createCtrlPackage();
+
+    if (start == false)
+    {
+        int wanted = m_storage.size();
+        m_storage.storage().clear();
+        m_storage.storage().reserve (wanted);
+    }
 }
 
 bool CSensorPrivate::tryReconnect (const QString &ip)
@@ -196,6 +203,12 @@ void CSensorPrivate::createCtrlPackage()
 
     QByteArray ar = QJsonDocument (o).toJson (QJsonDocument::Compact);
     sendCtrlPkg (ar);
+}
+
+data_t CSensorPrivate::getLastValues (int count)
+{
+    data_t res;
+    return m_storage.getLastValues (count);
 }
 
 void CSensorPrivate::sendCtrlPkg (const QByteArray& data)
