@@ -5,13 +5,15 @@
 #include <cmath>
 #include <QDebug>
 
+constexpr int maxStorageSize = 1000 * 60 * 10;
+
 CAccStorage::CAccStorage (QObject *parent) : QObject (parent)
 {
     m_meanPeriod = 0;
     m_packetCtr = 0;
     m_maxdiff = 0;
     m_mindiff = 0;
-    m_storage.reserve (1000 * 60 * 10);
+    resetToZero();
 }
 
 void CAccStorage::processNewData (const CSensorData &newdata)
@@ -23,32 +25,35 @@ void CAccStorage::processNewData (const CSensorData &newdata)
 
     m_packetCtr++;
     m_meanPeriod += period;
+    m_meanPeriod /= 2;
 
-    if (m_packetCtr > 1)
-    {
-        m_meanPeriod /= 2;
-    }
 
-    if (m_packetCtr <= 50)
-    {
-        m_mindiff = 0.0;
-        m_maxdiff = 0.0;
-    }
-    else
-    {
-        double c = period - m_meanPeriod;
-        m_maxdiff = qMax (m_maxdiff, c);
-        m_mindiff = qMin (m_mindiff, c);
-    }
+    double c = period - m_meanPeriod;
+    m_maxdiff = qMax (m_maxdiff, c);
+    m_mindiff = qMin (m_mindiff, c);
 
     for (int ctr = 0; ctr < total; ctr++)
     {
+        if (m_storage.size() >= maxStorageSize)
+        {
+            m_storage.removeFirst();
+        }
+
         QVector4D datum (newdata[ctr], start + (period * ctr));
         m_storage.append (datum);
     }
 
     // qDebug() << *this;
-    m_packetCtr -= 1;
+}
+
+void CAccStorage::resetToZero()
+{
+    m_storage.reserve (maxStorageSize);
+
+    for (int ctr = 0; ctr < maxStorageSize; ctr++)
+    {
+        m_storage.append (QVector4D (0, 0, 0, ctr));
+    }
 }
 
 data_t CAccStorage::get (uint32_t startTime, uint32_t endTime)
@@ -108,9 +113,19 @@ data_t CAccStorage::storage() const
 data_t CAccStorage::getLastValues (int count) const
 {
     data_t res;
-    res.reserve (count);
 
-    int cnt = m_storage.size() < count ? 0 : m_storage.size() - count;
+    if (m_storage.size() < count)
+    {
+        for (int ctr = 0; ctr < m_storage.size(); ctr++)
+        {
+            res.append (m_storage[ctr]);
+        }
+
+        return res;
+    }
+
+    res.reserve (count);
+    int cnt = m_storage.size() - count;
 
     for (; cnt < m_storage.size(); cnt++)
     {

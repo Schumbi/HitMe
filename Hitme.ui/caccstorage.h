@@ -22,11 +22,12 @@ class CAccStorage : public QObject {
 
     void processNewData (const CSensorData& newdata);
 
+
 public:
     explicit CAccStorage (QObject *parent = nullptr);
 
     data_t get (uint32_t startTime, uint32_t endTime);
-
+    void resetToZero();
     quint64 addRawData (const QByteArray& newdata);
 
     double meanPeriod() const;

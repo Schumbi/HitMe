@@ -37,7 +37,6 @@ public:
     BandWidth_e bandwidth();
     QString ip();
     bool isOnline();
-    bool isBMAOk();
     bool sensorStarted();
     QString sensorMsg();
     QString sensorErr();

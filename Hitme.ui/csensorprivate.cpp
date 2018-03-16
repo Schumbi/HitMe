@@ -142,13 +142,6 @@ void CSensorPrivate::setStartSensor (bool start)
 {
     m_startSensor = start;
     createCtrlPackage();
-
-    if (start == false)
-    {
-        int wanted = m_storage.size();
-        m_storage.storage().clear();
-        m_storage.storage().reserve (wanted);
-    }
 }
 
 bool CSensorPrivate::tryReconnect (const QString &ip)
@@ -160,11 +153,6 @@ bool CSensorPrivate::tryReconnect (const QString &ip)
 bool CSensorPrivate::isConnected() const
 {
     return m_connected;
-}
-
-bool CSensorPrivate::isBMAreadable()
-{
-    return m_bmaReadable;
 }
 
 QString CSensorPrivate::lastErr()
@@ -207,7 +195,6 @@ void CSensorPrivate::createCtrlPackage()
 
 data_t CSensorPrivate::getLastValues (int count)
 {
-    data_t res;
     return m_storage.getLastValues (count);
 }
 

@@ -20,6 +20,7 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     ui->accdata->setLayout (layout);
 
     enableUIInput (false);
+
     ui->pushButton_startstop->setText (QString ("Start"));
 
     m_sensor1 = new sensor::CSensor (sensor::CSensorConfig (
@@ -37,8 +38,9 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     connect (ui->checkBox_isOnline, &QCheckBox::stateChanged,
              this, &HitmeMainWindow::enableUIInput);
 
-    updateTimer.setInterval (250);
-    valuesToShow = 1000;
+    // ui update
+    updateTimer.setInterval (50);
+    valuesToShow = 5000;
     updateTimer.start();
 }
 
@@ -61,16 +63,20 @@ void HitmeMainWindow::statusUpdate()
 {
     ui->comboBox_bandwidth->setCurrentIndex (static_cast<int>
             (m_sensor1->bandwidth()));
+
     ui->comboBox_sensitivity->setCurrentIndex (static_cast<int>
             (m_sensor1->range()));
+
     ui->label_sensorIP->setText (m_sensor1->ip());
 
-    Qt::CheckState checked = Qt::CheckState::Unchecked;
+//    Qt::CheckState checked = Qt::CheckState::Unchecked;
 
-    if (m_sensor1->isOnline() && m_sensor1->isBMAOk())
-    {
-        checked = Qt::CheckState::Checked;
-    }
+//    if (m_sensor1->isOnline())
+//    {
+//        checked = Qt::CheckState::Checked;
+//    }
+//
+//    ui->checkBox_isOnline->setCheckState (checked);
 
     QString msg = m_sensor1->sensorErr();
 
@@ -84,8 +90,6 @@ void HitmeMainWindow::statusUpdate()
         ui->lineEdit_answer->setText (msg);
         QTimer::singleShot (1000, this, SLOT (deleteMessages()));
     }
-
-    ui->checkBox_isOnline->setCheckState (checked);
 }
 
 
@@ -95,6 +99,17 @@ void HitmeMainWindow::updateUI()
     {
         data_t toShow = m_sensor1->getLastValues (valuesToShow);
         m_accdisplay->setData (toShow);
+    }
+    else
+    {
+        Qt::CheckState checked = Qt::CheckState::Unchecked;
+
+        if (m_sensor1->isOnline())
+        {
+            checked = Qt::CheckState::Checked;
+        }
+
+        ui->checkBox_isOnline->setCheckState (checked);
     }
 }
 

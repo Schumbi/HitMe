@@ -68,11 +68,6 @@ bool CSensor::isOnline()
     return d->isConnected();
 }
 
-bool CSensor::isBMAOk()
-{
-    return d->isBMAreadable();
-}
-
 bool CSensor::sensorStarted()
 {
     return d->startedSensor();

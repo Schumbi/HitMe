@@ -40,8 +40,6 @@ public:
     bool tryReconnect (const QString& ip);
     // get connection state
     bool isConnected() const;
-    // return status of BMA
-    bool isBMAreadable();
     // last error message
     QString lastErr();
     // last message
