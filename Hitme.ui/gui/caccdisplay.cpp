@@ -3,8 +3,6 @@
 #include <QDebug>
 
 #include <QtCharts/QChartView>
-#include <QtCharts/QSplineSeries>
-#include <QtCharts/QScatterSeries>
 #include <QtCharts/QValueAxis>
 #include <QVBoxLayout>
 
@@ -18,9 +16,9 @@ CAccDisplay::CAccDisplay (QWidget *parent) :
 {
     m_chart = new QChart;
     m_chartView = new QChartView (m_chart);
-    m_seriesX = new QLineSeries;
-    m_seriesY = new QLineSeries;
-    m_seriesZ = new QLineSeries;
+    m_seriesX = new series_t;
+    m_seriesY = new series_t;
+    m_seriesZ = new series_t;
     m_chart->addSeries (m_seriesX);
     m_chart->addSeries (m_seriesY);
     m_chart->addSeries (m_seriesZ);
