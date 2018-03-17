@@ -5,7 +5,7 @@
 #include <QTimer>
 
 #include <csensordata.h>
-#include "../csensor.h"
+#include <csensor.h>
 
 namespace Ui {
 class HitmeMainWindow;

@@ -48,36 +48,8 @@ void CAccStorage::processNewData (const CSensorData &newdata)
 
 void CAccStorage::resetToZero()
 {
+    m_storage.clear();
     m_storage.reserve (maxStorageSize);
-
-    for (int ctr = 0; ctr < maxStorageSize; ctr++)
-    {
-        m_storage.append (QVector4D (0, 0, 0, ctr));
-    }
-}
-
-data_t CAccStorage::get (uint32_t startTime, uint32_t endTime)
-{
-    data_t ret;
-
-    for (int ctr = 0; ctr < m_storage.size(); ctr++)
-    {
-        auto pos = m_storage[ctr].w();
-
-        if ( pos >= startTime )
-        {
-            if (pos < endTime)
-            {
-                ret.append (m_storage[ctr]);
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-
-    return ret;
 }
 
 double CAccStorage::meanPeriod() const

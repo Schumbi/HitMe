@@ -23,28 +23,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 INCLUDEPATH += $$PWD/gui \
+               $$PWD/sensor \
                $$PWD/../sensor/src
-
 
 SOURCES += \
     main.cpp \
     gui/hitmemainwindow.cpp \
     gui/caccdisplay.cpp \
-    csensor.cpp \
-    csensorprivate.cpp \
-    csensordata.cpp \
-    caccstorage.cpp \
-    caccdataconverter.cpp
+    sensor/csensor.cpp \
+    sensor/csensorprivate.cpp \
+    sensor/csensordata.cpp \
+    sensor/caccstorage.cpp \
+    sensor/caccdataconverter.cpp
 
 HEADERS += \
     gui/hitmemainwindow.h \
     gui/caccdisplay.h \
-    csensor.h \
-    csensorprivate.h \
-    csensorconfig.h \
-    csensordata.h \
-    caccdataconverter.h \
-    caccstorage.h
+    sensor/csensor.h \
+    sensor/csensorprivate.h \
+    sensor/csensorconfig.h \
+    sensor/csensordata.h \
+    sensor/caccdataconverter.h \
+    sensor/caccstorage.h
 
 FORMS += \
     forms/hitmemainwindow.ui

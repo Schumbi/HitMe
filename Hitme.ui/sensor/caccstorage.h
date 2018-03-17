@@ -26,7 +26,6 @@ class CAccStorage : public QObject {
 public:
     explicit CAccStorage (QObject *parent = nullptr);
 
-    data_t get (uint32_t startTime, uint32_t endTime);
     void resetToZero();
     quint64 addRawData (const QByteArray& newdata);
 

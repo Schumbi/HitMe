@@ -8,7 +8,7 @@
 #include <QtCharts/QSplineSeries>
 #include <QtCharts/QScatterSeries>
 
-#include "../caccstorage.h"
+#include <caccstorage.h>
 
 class CAccDisplay : public QWidget {
 
