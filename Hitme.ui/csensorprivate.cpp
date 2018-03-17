@@ -198,6 +198,11 @@ data_t CSensorPrivate::getLastValues (int count)
     return m_storage.getLastValues (count);
 }
 
+int CSensorPrivate::getSizeOfStorage()
+{
+    return m_storage.size();
+}
+
 void CSensorPrivate::sendCtrlPkg (const QByteArray& data)
 {
     QNetworkDatagram datagram;

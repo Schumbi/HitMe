@@ -5,7 +5,7 @@
 #include <cmath>
 #include <QDebug>
 
-constexpr int maxStorageSize = 1000 * 60 * 10;
+constexpr int maxStorageSize = 1000 * 60 * 5;
 
 CAccStorage::CAccStorage (QObject *parent) : QObject (parent)
 {
@@ -95,7 +95,7 @@ double CAccStorage::mindiff() const
     return  m_mindiff;
 }
 
-double CAccStorage::size() const
+int CAccStorage::size() const
 {
     return m_storage.size();
 }

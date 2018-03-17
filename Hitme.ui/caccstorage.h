@@ -33,7 +33,7 @@ public:
     double meanPeriod() const;
     double maxdiff() const;
     double mindiff() const;
-    double size() const;
+    int size() const;
     quint64 packetCount() const;
     data_t storage() const;
     data_t getLastValues (int count) const;

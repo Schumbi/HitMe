@@ -93,6 +93,11 @@ data_t CSensor::getLastValues (int count)
     return d->getLastValues (count);
 }
 
+int CSensor::getSizeOfStorage()
+{
+    return d->getSizeOfStorage();
+}
+
 bool CSensor::setGRange (GRange_e val)
 {
     bool suc = true;

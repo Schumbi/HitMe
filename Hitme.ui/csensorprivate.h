@@ -50,6 +50,8 @@ public:
     void createCtrlPackage();
     // return last data from count to end
     data_t getLastValues (int count);
+    // get size of storage
+    int getSizeOfStorage();
 
 signals:
     void connected (bool bound);

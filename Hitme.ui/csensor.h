@@ -42,6 +42,7 @@ public:
     QString sensorErr();
     void deleteMessages();
     data_t getLastValues (int count);
+    int getSizeOfStorage();
 
 public slots:
     bool setGRange (GRange_e val);
