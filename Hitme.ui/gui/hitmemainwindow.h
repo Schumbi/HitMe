@@ -6,6 +6,7 @@
 
 #include <csensordata.h>
 #include <csensor.h>
+#include <csignalprocessing.h>
 
 namespace Ui {
 class HitmeMainWindow;
@@ -21,6 +22,7 @@ private:
     QTimer updateTimer;
     bool accEnabled;
     sensor::CSensor* m_sensor1;
+    signal::CSignalProcessing* m_sigCalc;
     CAccDisplay *m_accdisplay;
     int valuesToShow;
 

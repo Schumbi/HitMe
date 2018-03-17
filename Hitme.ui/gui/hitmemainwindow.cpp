@@ -1,6 +1,8 @@
 #include "hitmemainwindow.h"
 #include "ui_hitmemainwindow.h"
 
+#include <csignalprocessing.h>
+
 #include "caccdisplay.h"
 
 #include <QLayout>
@@ -25,6 +27,8 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
 
     m_sensor1 = new sensor::CSensor (sensor::CSensorConfig (
                                          QString ("192.168.1.7")), this);
+
+    m_sigCalc = new signal::CSignalProcessing (this);
     m_sensor1->setStarted (false);
 
     connect (m_sensor1, SIGNAL (statusUpdate()),
@@ -49,6 +53,11 @@ HitmeMainWindow::~HitmeMainWindow()
     if (m_sensor1 != nullptr)
     {
         delete  m_sensor1;
+    }
+
+    if (m_sigCalc != nullptr)
+    {
+        delete m_sigCalc;
     }
 
     delete ui;
@@ -89,6 +98,7 @@ void HitmeMainWindow::updateUI()
     if (accEnabled)
     {
         data_t toShow = m_sensor1->getLastValues (valuesToShow);
+        m_sigCalc->process (toShow);
         m_accdisplay->setData (toShow);
         QString msg = QString ("%1 %2").arg (toShow.size()).arg (
                           m_sensor1->getSizeOfStorage());

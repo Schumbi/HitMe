@@ -24,6 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += $$PWD/gui \
                $$PWD/sensor \
+               $$PWD/signal \
                $$PWD/../sensor/src
 
 SOURCES += \
@@ -34,7 +35,8 @@ SOURCES += \
     sensor/csensorprivate.cpp \
     sensor/csensordata.cpp \
     sensor/caccstorage.cpp \
-    sensor/caccdataconverter.cpp
+    sensor/caccdataconverter.cpp \
+    signal/csignalprocessing.cpp
 
 HEADERS += \
     gui/hitmemainwindow.h \
@@ -44,7 +46,13 @@ HEADERS += \
     sensor/csensorconfig.h \
     sensor/csensordata.h \
     sensor/caccdataconverter.h \
-    sensor/caccstorage.h
+    sensor/caccstorage.h \
+    signal/csignalprocessing.h
 
 FORMS += \
     forms/hitmemainwindow.ui
+
+unix:!macx: LIBS += -L$$PWD/../../../../../../usr/lib/ -lliquid
+
+INCLUDEPATH += $$PWD/../../../../../../usr/include/liquid
+DEPENDPATH += $$PWD/../../../../../../usr/include/liquid
