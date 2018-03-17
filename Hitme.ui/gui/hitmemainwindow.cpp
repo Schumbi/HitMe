@@ -69,15 +69,6 @@ void HitmeMainWindow::statusUpdate()
 
     ui->label_sensorIP->setText (m_sensor1->ip());
 
-//    Qt::CheckState checked = Qt::CheckState::Unchecked;
-
-//    if (m_sensor1->isOnline())
-//    {
-//        checked = Qt::CheckState::Checked;
-//    }
-//
-//    ui->checkBox_isOnline->setCheckState (checked);
-
     QString msg = m_sensor1->sensorErr();
 
     if (msg.isEmpty())
@@ -99,6 +90,9 @@ void HitmeMainWindow::updateUI()
     {
         data_t toShow = m_sensor1->getLastValues (valuesToShow);
         m_accdisplay->setData (toShow);
+        QString msg = QString ("%1 %2").arg (toShow.size()).arg (
+                          m_sensor1->getSizeOfStorage());
+        ui->lineEdit_answer->setText (msg);
     }
     else
     {
