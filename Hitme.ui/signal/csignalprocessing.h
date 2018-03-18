@@ -12,7 +12,9 @@ namespace signal {
 class CSignalProcessing : public QObject {
     Q_OBJECT
 
-    iirfilt_rrrf q;
+    iirfilt_rrrf qx;
+    iirfilt_rrrf qy;
+    iirfilt_rrrf qz;
 
 public:
     explicit CSignalProcessing (QObject *parent = nullptr);
