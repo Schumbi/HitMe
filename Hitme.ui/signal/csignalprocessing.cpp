@@ -9,8 +9,8 @@ using namespace signal;
 
 CSignalProcessing::CSignalProcessing (QObject *parent) : QObject (parent)
 {
-    unsigned int order =   8;         // filter order
-    float        fc    =   0.01f;      // cutoff frequency
+    unsigned int order =   4;         // filter order
+    float        fc    =   0.1f;      // cutoff frequency
     float        f0    =   0.0f;      // center frequency
     float        Ap    =   1.0f;      // pass-band ripple
     float        As    =  40.0f;      // stop-band attenuation
@@ -38,9 +38,9 @@ bool CSignalProcessing::process (data_t &data)
     for (unsigned int ctr = 0; ctr < n; ctr++)
     {
         // load value
-        cx[ctr] = data[ctr].z();
+        cx[ctr] = data[n - ctr - 1].z();
         iirfilt_rrrf_execute (q, cx[ctr], &cy[ctr]);
-        data[ctr].setZ (cy[ctr]);
+        data[n - ctr - 1].setZ (cy[ctr]);
     }
 
     return true;
