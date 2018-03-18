@@ -22,8 +22,6 @@ private:
 
     QtCharts::QChart *m_chart;
     series_t *m_seriesX;
-    series_t *m_seriesY;
-    series_t *m_seriesZ;
     QtCharts::QChartView *m_chartView;
 
 public:
@@ -31,7 +29,7 @@ public:
     ~CAccDisplay();
 
 public slots:
-    void setData (const data_t &data);
+    void setData (const data_t &data, double min, double max);
 
 };
 

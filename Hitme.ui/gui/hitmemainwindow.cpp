@@ -97,12 +97,44 @@ void HitmeMainWindow::updateUI()
 {
     if (accEnabled)
     {
+        double fac = 1.0;
+        double min = 0.0;
+        double max = 1.0;
+
+        switch (m_sensor1->range())
+        {
+        // 512 => 2g
+        case sensor::GRange_e::G2:
+            fac = 2 / ((1024 / 2.0));
+            max = 2.0;
+            break;
+
+        // 512 => 4g
+        case sensor::GRange_e::G4:
+            fac = 4 / ((1024 / 2.0));
+            max = 4.0;
+            break;
+
+        // 512 => 8g
+        case sensor::GRange_e::G8:
+            fac = 8 / ((1024 / 2.0));
+            max = 8.0;
+            break;
+
+        }
+
         data_t toShow = m_sensor1->getLastValues (valuesToShow);
-        m_sigCalc->process (toShow);
-        m_accdisplay->setData (toShow);
-        QString msg = QString ("%1 %2").arg (toShow.size()).arg (
-                          m_sensor1->getSizeOfStorage());
-        ui->lineEdit_answer->setText (msg);
+        fac = m_sigCalc->process (toShow, fac);
+        m_accdisplay->setData (toShow, min, max);
+
+        if (toShow.size() > 0)
+        {
+            QString msg = QString ("%1 %2 %3")
+                          .arg (toShow.size())
+                          .arg (m_sensor1->getSizeOfStorage())
+                          .arg (toShow.last().x() * fac);
+            ui->lineEdit_answer->setText (msg);
+        }
     }
     else
     {

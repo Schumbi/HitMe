@@ -17,11 +17,11 @@ CAccDisplay::CAccDisplay (QWidget *parent) :
     m_chart = new QChart;
     m_chartView = new QChartView (m_chart);
     m_seriesX = new series_t;
-    m_seriesY = new series_t;
-    m_seriesZ = new series_t;
+//    m_seriesY = new series_t;
+//    m_seriesZ = new series_t;
     m_chart->addSeries (m_seriesX);
-    m_chart->addSeries (m_seriesY);
-    m_chart->addSeries (m_seriesZ);
+//    m_chart->addSeries (m_seriesY);
+//    m_chart->addSeries (m_seriesZ);
 
     QValueAxis *axisX = new QValueAxis;
     axisX->setRange (0, c_datacnt);
@@ -29,7 +29,7 @@ CAccDisplay::CAccDisplay (QWidget *parent) :
     axisX->setTitleText ("Time");
 
     QValueAxis *axisY = new QValueAxis;
-    axisY->setRange (-600, 600);
+    axisY->setRange (-5, 600);
     axisY->setTitleText ("Acceleration");
     m_chart->setAxisX (axisX, m_seriesX);
     m_chart->setAxisY (axisY, m_seriesX);
@@ -37,10 +37,10 @@ CAccDisplay::CAccDisplay (QWidget *parent) :
     m_chart->setTitle (QString ("Data from Accaleration sensor"));
 
 
-    m_seriesY->attachAxis (axisX);
-    m_seriesY->attachAxis (axisY);
-    m_seriesZ->attachAxis (axisX);
-    m_seriesZ->attachAxis (axisY);
+//    m_seriesY->attachAxis (axisX);
+//    m_seriesY->attachAxis (axisY);
+//    m_seriesZ->attachAxis (axisX);
+//    m_seriesZ->attachAxis (axisY);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget (m_chartView);
@@ -51,7 +51,7 @@ CAccDisplay::CAccDisplay (QWidget *parent) :
 CAccDisplay::~CAccDisplay()
 {}
 
-void CAccDisplay::setData (const data_t &data)
+void CAccDisplay::setData (const data_t &data, double min, double max)
 {
     if (data.size() == 0)
     {
@@ -63,23 +63,16 @@ void CAccDisplay::setData (const data_t &data)
 
     QVector<QPointF> pointsX;
     pointsX.reserve (size);
-    QVector<QPointF> pointsY;
-    pointsY.reserve (size);
-    QVector<QPointF> pointsZ;
-    pointsZ.reserve (size);
 
     for (int ctr = start; ctr < data.size(); ctr++)
     {
         pointsX.append (QPointF (data[ctr].w() / 1000000.0, data[ctr].x()));
-        pointsY.append (QPointF (data[ctr].w() / 1000000.0, data[ctr].y()));
-        pointsZ.append (QPointF (data[ctr].w() / 1000000.0, data[ctr].z()));
     }
 
     m_chart->axisX()->setRange (data[start].w() / 1000000.0,
                                 data.last().w() / 1000000.0);
+    m_chart->axisY()->setRange (min, max);
 
     m_seriesX->replace (pointsX);
-    m_seriesY->replace (pointsY);
-    m_seriesZ->replace (pointsZ);
 }
 
