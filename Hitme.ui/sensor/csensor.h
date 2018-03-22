@@ -50,9 +50,10 @@ public slots:
     void setStarted (bool start);
 
 signals:
-    void rangeChange (GRange_e range);
-    void bandWidthChange (BandWidth_e bw);
     void statusUpdate();
+    void connected (bool bound);
+    void ctrlParseError (const QString &err);
+    void dataParsed ();
 
 private:
     CSensorPrivate* d;

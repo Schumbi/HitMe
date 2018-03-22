@@ -27,7 +27,7 @@ public:
     explicit CAccStorage (QObject *parent = nullptr);
 
     void resetToZero();
-    quint64 addRawData (const QByteArray& newdata);
+    quint32 addRawData(const QByteArray& newdata);
 
     double meanPeriod() const;
     double maxdiff() const;

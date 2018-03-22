@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QUdpSocket>
 #include <QHostAddress>
+#include <QTimer>
 
 #include "caccstorage.h"
 
@@ -53,13 +54,10 @@ public:
     // get size of storage
     int getSizeOfStorage();
 
-signals:
-    void connected (bool bound);
-    void ctrlParseError (const QString &err);
-    void ctrlParsed ();
-    void dataParsed ();
-
 private:
+    QTimer m_reconnectTimer;
+    quint64 m_lastMillis;
+
     CSensor* p;
     // is BMA readable
     bool m_bmaReadable;
@@ -98,6 +96,9 @@ private:
     bool processAnswer (const QJsonObject& o);
     // send commands to sensor
     void sendCtrlPkg (const QByteArray& data);
+
+private slots:
+    void checkConnection();
 
 public slots:
     // readyRead ctrl

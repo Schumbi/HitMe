@@ -107,7 +107,7 @@ data_t CAccStorage::getLastValues (int count) const
     return res;
 }
 
-quint64 CAccStorage::addRawData (const QByteArray &data)
+quint32 CAccStorage::addRawData (const QByteArray &data)
 {
     CAccDataConverter::conv32_t conv32;
     CAccDataConverter::conv16_t conv16;
@@ -131,6 +131,7 @@ quint64 CAccStorage::addRawData (const QByteArray &data)
     conv32.val8x4[2] = data[6];
     conv32.val8x4[3] = data[7];
     accData.setEndTimestamp (conv32.val32x1);
+    quint32 endTime = conv32.val32x1;
     // data[4] LSB
     // data[5]
     // data[6]
@@ -158,7 +159,7 @@ quint64 CAccStorage::addRawData (const QByteArray &data)
     }
 
     processNewData (accData);
-    return packetCount();
+    return endTime;
 }
 
 QDebug operator<< (QDebug dbg, const CAccStorage &data)

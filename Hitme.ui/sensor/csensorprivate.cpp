@@ -29,10 +29,18 @@ CSensorPrivate::CSensorPrivate (const QString &ip,
       m_controlPort (controlPort),
       m_dataPort (dataPort), m_ip (ip)
 {
+    m_lastMillis = 0;
     m_controlSocket = new QUdpSocket (this);
     m_dataSocket = new QUdpSocket (this);
     // connect (listen to ports for udp packages)
     reconnect();
+
+    // connection timer
+    m_reconnectTimer.setInterval (100);
+    connect (&m_reconnectTimer, &QTimer::timeout,
+             this, &CSensorPrivate::checkConnection);
+    // start connection timer
+    m_reconnectTimer.start();
 }
 
 bool CSensorPrivate::reconnect()
@@ -59,7 +67,6 @@ bool CSensorPrivate::reconnect()
     bound &= m_dataSocket->bind (QHostAddress::AnyIPv4, m_dataPort);
 
     m_connected = bound;
-    emit connected (m_connected);
 
     if (bound)
     {
@@ -211,6 +218,27 @@ void CSensorPrivate::sendCtrlPkg (const QByteArray& data)
     m_dataSocket->writeDatagram (datagram);
 }
 
+void CSensorPrivate::checkConnection()
+{
+    m_connected = false;
+
+    // compare timestamps
+    // if they are equal, no new data were send
+    // connection got lost
+    if (m_millis != m_lastMillis)
+    {
+        m_lastMillis = m_millis;
+        m_connected = true;
+        m_reconnectTimer.setInterval (1500);
+    }
+    else
+    {
+        m_reconnectTimer.setInterval (100);
+    }
+
+    emit p->connected (m_connected);
+}
+
 bool CSensorPrivate::processStatusMessage (const QJsonObject &o)
 {
     QJsonValue val;
@@ -296,7 +324,7 @@ void CSensorPrivate::processCtrlPackage (const QByteArray &data)
 
     if (jdoc.isNull())
     {
-        emit ctrlParseError (jerror.errorString());
+        emit p->ctrlParseError (jerror.errorString());
         return;
     }
 
@@ -323,10 +351,10 @@ void CSensorPrivate::processCtrlPackage (const QByteArray &data)
     }
 }
 
-void sensor::CSensorPrivate::processDataPackage (const QByteArray &data)
+void CSensorPrivate::processDataPackage (const QByteArray &data)
 {
-    m_storage.addRawData (data);
-    emit dataParsed();
+    m_millis = m_storage.addRawData (data);
+    emit p->dataParsed();
 }
 } // ns sensor
 

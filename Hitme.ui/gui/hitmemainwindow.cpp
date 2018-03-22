@@ -39,12 +39,15 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     connect (&updateTimer, &QTimer::timeout,
              this, &HitmeMainWindow::updateUI);
 
+    connect (m_sensor1, SIGNAL (connected (bool)),
+             ui->checkBox_isOnline, SLOT (setChecked (bool)));
+
     connect (ui->checkBox_isOnline, &QCheckBox::stateChanged,
              this, &HitmeMainWindow::enableUIInput);
 
     // ui update
     updateTimer.setInterval (50);
-    valuesToShow = 5000;
+    valuesToShow = 15000;
     updateTimer.start();
 }
 
@@ -123,8 +126,11 @@ void HitmeMainWindow::updateUI()
 
         }
 
+        // retrieve data from sensor
         data_t toShow = m_sensor1->getLastValues (valuesToShow);
+        // process date
         fac = m_sigCalc->process (toShow, fac);
+        // show data
         m_accdisplay->setData (toShow, min, max);
 
         if (toShow.size() > 0)
@@ -136,17 +142,18 @@ void HitmeMainWindow::updateUI()
             ui->lineEdit_answer->setText (msg);
         }
     }
-    else
-    {
-        Qt::CheckState checked = Qt::CheckState::Unchecked;
 
-        if (m_sensor1->isOnline())
-        {
-            checked = Qt::CheckState::Checked;
-        }
+//    else
+//    {
+//        Qt::CheckState checked = Qt::CheckState::Unchecked;
 
-        ui->checkBox_isOnline->setCheckState (checked);
-    }
+//        if (m_sensor1->isOnline())
+//        {
+//            checked = Qt::CheckState::Checked;
+//        }
+
+//        ui->checkBox_isOnline->setCheckState (checked);
+//    }
 }
 
 void HitmeMainWindow::on_pushButton_startstop_clicked()
@@ -176,6 +183,7 @@ void HitmeMainWindow::on_comboBox_bandwidth_currentIndexChanged (int index)
 
 void HitmeMainWindow::enableUIInput (bool enable)
 {
+    ui->frame_sensorSettings->setEnabled (enable);
     ui->pushButton_startstop->setEnabled (enable);
     ui->comboBox_bandwidth->setEnabled (enable);
     ui->comboBox_sensitivity->setEnabled (enable);
