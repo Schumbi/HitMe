@@ -36,7 +36,11 @@ SOURCES += \
     sensor/csensordata.cpp \
     sensor/caccstorage.cpp \
     sensor/caccdataconverter.cpp \
-    signal/csignalprocessing.cpp
+    signal/csignalprocessing.cpp \
+    signal/csignalprocessingprivate.cpp \
+    signal/processor/csignalabsbiasremover.cpp \
+    signal/processor/csignalrectifier.cpp \
+    signal/cabstractprocessor.cpp
 
 HEADERS += \
     gui/hitmemainwindow.h \
@@ -47,7 +51,11 @@ HEADERS += \
     sensor/csensordata.h \
     sensor/caccdataconverter.h \
     sensor/caccstorage.h \
-    signal/csignalprocessing.h
+    signal/csignalprocessing.h \
+    signal/csignalprocessingprivate.h \
+    signal/processor/csignalabsbiasremover.h \
+    signal/processor/csignalrectifier.h \
+    signal/cabstractprocessor.h
 
 FORMS += \
     forms/hitmemainwindow.ui

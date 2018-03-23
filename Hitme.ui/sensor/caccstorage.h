@@ -4,10 +4,10 @@
 #include <csensordata.h>
 #include <QObject>
 
-#include <QList>
+#include <QVector>
 #include <QVector4D>
 
-typedef QList<QVector4D> data_t ;
+typedef QVector<QVector4D> data_t ;
 
 class CAccStorage : public QObject {
 
@@ -22,12 +22,11 @@ class CAccStorage : public QObject {
 
     void processNewData (const CSensorData& newdata);
 
-
 public:
     explicit CAccStorage (QObject *parent = nullptr);
 
     void resetToZero();
-    quint32 addRawData(const QByteArray& newdata);
+    quint32 addRawData (const QByteArray& newdata);
 
     double meanPeriod() const;
     double maxdiff() const;

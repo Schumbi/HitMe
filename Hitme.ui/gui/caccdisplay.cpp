@@ -24,8 +24,8 @@ CAccDisplay::CAccDisplay (QWidget *parent) :
 //    m_chart->addSeries (m_seriesZ);
 
     QValueAxis *axisX = new QValueAxis;
-    axisX->setRange (0, c_datacnt);
-    axisX->setLabelFormat ("%g");
+    axisX->setRange (-1, 0);
+    axisX->setLabelFormat ("%d");
     axisX->setTitleText ("Time");
 
     QValueAxis *axisY = new QValueAxis;
@@ -51,27 +51,31 @@ CAccDisplay::CAccDisplay (QWidget *parent) :
 CAccDisplay::~CAccDisplay()
 {}
 
-void CAccDisplay::setData (const data_t &data, double min, double max)
+void CAccDisplay::setData (const data_t &data,
+                           double ymin, double ymax,
+                           const double timeStretch)
 {
     if (data.size() == 0)
     {
         return;
     }
 
-    int start = data.size() < c_datacnt ? 0 : data.size() - c_datacnt;
-    int size = data.size() < c_datacnt ? data.size() : c_datacnt;
+    int size = data.size();
 
     QVector<QPointF> pointsX;
     pointsX.reserve (size);
 
-    for (int ctr = start; ctr < data.size(); ctr++)
+    double end = data.last().w();
+    double beg = data.first().w();
+
+    for (int ctr = 0; ctr < data.size(); ctr++)
     {
-        pointsX.append (QPointF (data[ctr].w() / 1000000.0, data[ctr].x()));
+        pointsX.append (QPointF ((data[ctr].w() - end) / timeStretch,
+                                 data[ctr].x()));
     }
 
-    m_chart->axisX()->setRange (data[start].w() / 1000000.0,
-                                data.last().w() / 1000000.0);
-    m_chart->axisY()->setRange (min, max);
+    m_chart->axisX()->setRange ((beg - end) / timeStretch, 0);
+    m_chart->axisY()->setRange (ymin, ymax);
 
     m_seriesX->replace (pointsX);
 }

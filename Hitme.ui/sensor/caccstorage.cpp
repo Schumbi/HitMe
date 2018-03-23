@@ -36,7 +36,8 @@ void CAccStorage::processNewData (const CSensorData &newdata)
     {
         if (m_storage.size() >= maxStorageSize)
         {
-            m_storage.removeFirst();
+            int diff = m_storage.size() - maxStorageSize;
+            m_storage.remove (0, diff);
         }
 
         QVector4D datum (newdata[ctr], start + (period * ctr));

@@ -18,8 +18,6 @@ class CAccDisplay : public QWidget {
 
 private:
 
-    const int c_datacnt = 10000;
-
     QtCharts::QChart *m_chart;
     series_t *m_seriesX;
     QtCharts::QChartView *m_chartView;
@@ -29,7 +27,8 @@ public:
     ~CAccDisplay();
 
 public slots:
-    void setData (const data_t &data, double min, double max);
+    void setData (const data_t &data, double ymin, double ymax,
+                  const double timeStretch = 1000000);
 
 };
 

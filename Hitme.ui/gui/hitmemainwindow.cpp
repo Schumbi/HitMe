@@ -10,7 +10,9 @@
 #include <QTimer>
 
 HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
-    QMainWindow (parent), accEnabled (false),
+    QMainWindow (parent),
+    calibrating (false),
+    accEnabled (false),
     ui (new Ui::HitmeMainWindow)
 {
     ui->setupUi (this);
@@ -21,8 +23,6 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     layout->addWidget (m_accdisplay);
     ui->accdata->setLayout (layout);
 
-    enableUIInput (false);
-
     ui->pushButton_startstop->setText (QString ("Start"));
 
     m_sensor1 = new sensor::CSensor (sensor::CSensorConfig (
@@ -31,24 +31,25 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     m_sigCalc = new signal::CSignalProcessing (this);
     m_sensor1->setStarted (false);
 
-    connect (m_sensor1, SIGNAL (statusUpdate()),
-             this, SLOT (statusUpdate()));
+    connect (m_sensor1, &sensor::CSensor::statusUpdate,
+             this, &HitmeMainWindow::statusUpdate);
+    connect (m_sensor1, &sensor::CSensor::connected,
+             this, &HitmeMainWindow::enableUIInput);
+
+    connect (m_sigCalc, &signal::CSignalProcessing::calibrated,
+             this, &HitmeMainWindow::calibratedData);
 
     statusUpdate();
 
     connect (&updateTimer, &QTimer::timeout,
              this, &HitmeMainWindow::updateUI);
 
-    connect (m_sensor1, SIGNAL (connected (bool)),
-             ui->checkBox_isOnline, SLOT (setChecked (bool)));
-
-    connect (ui->checkBox_isOnline, &QCheckBox::stateChanged,
-             this, &HitmeMainWindow::enableUIInput);
-
     // ui update
     updateTimer.setInterval (50);
     valuesToShow = 15000;
     updateTimer.start();
+
+    enableUIInput (false);
 }
 
 HitmeMainWindow::~HitmeMainWindow()
@@ -90,11 +91,9 @@ void HitmeMainWindow::statusUpdate()
 
     if (msg.isEmpty() == false)
     {
-        ui->lineEdit_answer->setText (msg);
         QTimer::singleShot (1000, this, SLOT (deleteMessages()));
     }
 }
-
 
 void HitmeMainWindow::updateUI()
 {
@@ -126,40 +125,16 @@ void HitmeMainWindow::updateUI()
 
         }
 
+        m_sigCalc->setConversionFactor (fac);
         // retrieve data from sensor
         data_t toShow = m_sensor1->getLastValues (valuesToShow);
         // process date
-        fac = m_sigCalc->process (toShow, fac);
+        m_sigCalc->process (toShow);
         // show data
         m_accdisplay->setData (toShow, min, max);
-
-        if (toShow.size() > 0)
-        {
-            QString msg = QString ("%1 %2 %3")
-                          .arg (toShow.size())
-                          .arg (m_sensor1->getSizeOfStorage())
-                          .arg (toShow.last().x() * fac);
-            ui->lineEdit_answer->setText (msg);
-        }
     }
 
-//    else
-//    {
-//        Qt::CheckState checked = Qt::CheckState::Unchecked;
-
-//        if (m_sensor1->isOnline())
-//        {
-//            checked = Qt::CheckState::Checked;
-//        }
-
-//        ui->checkBox_isOnline->setCheckState (checked);
-//    }
-}
-
-void HitmeMainWindow::on_pushButton_startstop_clicked()
-{
-    accEnabled = !accEnabled;
-    m_sensor1->setStarted (accEnabled);
+    ui->pushButton_calibration->setEnabled (accEnabled);
 
     if (accEnabled)
     {
@@ -171,13 +146,21 @@ void HitmeMainWindow::on_pushButton_startstop_clicked()
     }
 }
 
+void HitmeMainWindow::on_pushButton_startstop_clicked()
+{
+    accEnabled = !accEnabled;
+    m_sensor1->setStarted (accEnabled);
+}
+
 void HitmeMainWindow::on_comboBox_sensitivity_currentIndexChanged (int index)
 {
+    stopSensor();
     m_sensor1->setGRange (static_cast<sensor::GRange_e> (index));
 }
 
 void HitmeMainWindow::on_comboBox_bandwidth_currentIndexChanged (int index)
 {
+    stopSensor();
     m_sensor1->setBandWidth (static_cast<sensor::BandWidth_e> (index));
 }
 
@@ -187,4 +170,46 @@ void HitmeMainWindow::enableUIInput (bool enable)
     ui->pushButton_startstop->setEnabled (enable);
     ui->comboBox_bandwidth->setEnabled (enable);
     ui->comboBox_sensitivity->setEnabled (enable);
+}
+
+void HitmeMainWindow::calibratedData (QVector3D biases)
+{
+    m_dataBias = biases;
+}
+
+void HitmeMainWindow::on_pushButton_calibration_clicked()
+{
+    startCalibration();
+}
+
+void HitmeMainWindow::stopSensor()
+{
+    accEnabled = false;
+    m_sensor1->setStarted (false);
+}
+
+void HitmeMainWindow::startSensor()
+{
+    accEnabled = true;
+    m_sensor1->setStarted (true);
+}
+
+void HitmeMainWindow::stopCalibration()
+{
+    calibrating = false;
+    m_sigCalc->setCalibrating (calibrating);
+    this->enableUIInput (true);
+}
+
+void HitmeMainWindow::startCalibration()
+{
+    if (calibrating == false)
+    {
+        calibrating = true;
+    }
+
+    m_sigCalc->setCalibrating (true);
+    QTimer::singleShot (5000, this, SLOT (stopCalibration()));
+
+    this->enableUIInput (false);
 }

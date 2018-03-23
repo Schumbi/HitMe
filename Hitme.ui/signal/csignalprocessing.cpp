@@ -1,35 +1,44 @@
 #include "csignalprocessing.h"
-
-#include <cmath>
-#include <ccomplex>
-
-#include <liquid/liquid.h>
+#include "csignalprocessingprivate.h"
 
 using namespace signal;
 
-CSignalProcessing::CSignalProcessing (QObject *parent) : QObject (parent)
+double CSignalProcessing::conversionFactor() const
+{
+    return d->conversionFactor();
+}
+
+void CSignalProcessing::setConversionFactor (double conversionFactor)
+{
+    d->setConversionFactor (conversionFactor);
+}
+
+QVector3D CSignalProcessing::bias()
+{
+    return d->bias();
+}
+
+CSignalProcessing::CSignalProcessing (QObject *parent) :
+    QObject (parent),
+    d (new CSignalProcessingPrivate (this))
 {}
 
-bool CSignalProcessing::process (data_t &data, double &fac)
+CSignalProcessing::~CSignalProcessing()
 {
-    unsigned int n     = data.size(); // number of samples
-    double in_x;
-    double in_y;
-    double in_z;
-
-    for (unsigned int ctr = 0; ctr < n; ctr++)
+    if (d != nullptr)
     {
-        auto d = data[n - ctr - 1];
-        // load value
-        in_x = d.x() * fac;
-        in_y = d.y() * fac;
-        in_z = d.z() * fac;
-        data[n - ctr - 1].setX (sqrt (in_x * in_x + in_y * in_y + in_z * in_z));
-        data[n - ctr - 1].setY (-1);
-        data[n - ctr - 1].setZ (-1);
+        delete d;
     }
+}
 
-    return true;
+void CSignalProcessing::process (data_t &data)
+{
+    d->process (data);
+}
+
+void CSignalProcessing::setCalibrating (bool state)
+{
+    d->setCalibrating (state);
 }
 
 
