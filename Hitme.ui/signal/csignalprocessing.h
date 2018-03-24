@@ -27,6 +27,7 @@ public:
     void setConversionFactor (double conversionFactor);
 
     QVector3D bias();
+    QVector3D maxValue();
 
 signals:
     void calibrated (QVector3D bias) const;

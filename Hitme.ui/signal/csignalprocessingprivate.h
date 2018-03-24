@@ -21,6 +21,7 @@ class CSignalProcessingPrivate final : public QObject {
     QVector3D m_bias;
     // state of calibration
     bool m_isCalibrating;
+    QVector3D m_maxValue;
     // required storage to calculate biases
     QVector<QVector3D> tempStorage;
     // calibration function
@@ -37,6 +38,7 @@ public:
     bool isCalibrating() const;
     // return bias
     QVector3D bias() const;
+    QVector3D maxValue() const;
 
     double conversionFactor() const;
     void setConversionFactor (double conversionFactor);
@@ -44,6 +46,9 @@ public:
 public slots:
     // control calibration state
     void setCalibrating (bool m_isCalibrating);
+
+protected slots:
+    void setMaxValue (QVector3D val);
 };
 
 }

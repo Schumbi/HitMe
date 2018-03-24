@@ -18,6 +18,11 @@ QVector3D CSignalProcessing::bias()
     return d->bias();
 }
 
+QVector3D CSignalProcessing::maxValue()
+{
+    return d->maxValue();
+}
+
 CSignalProcessing::CSignalProcessing (QObject *parent) :
     QObject (parent),
     d (new CSignalProcessingPrivate (this))

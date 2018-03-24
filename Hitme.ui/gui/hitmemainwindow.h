@@ -66,6 +66,8 @@ private slots:
     void stopSensor();
     void startSensor();
 
+    void on_spinBox_duration_valueChanged (int arg1);
+
 private:
     Ui::HitmeMainWindow *ui;
 };

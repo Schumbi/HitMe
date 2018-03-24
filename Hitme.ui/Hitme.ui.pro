@@ -40,7 +40,8 @@ SOURCES += \
     signal/csignalprocessingprivate.cpp \
     signal/processor/csignalabsbiasremover.cpp \
     signal/processor/csignalrectifier.cpp \
-    signal/cabstractprocessor.cpp
+    signal/cabstractprocessor.cpp \
+    signal/processor/csignalgetmax.cpp
 
 HEADERS += \
     gui/hitmemainwindow.h \
@@ -55,7 +56,8 @@ HEADERS += \
     signal/csignalprocessingprivate.h \
     signal/processor/csignalabsbiasremover.h \
     signal/processor/csignalrectifier.h \
-    signal/cabstractprocessor.h
+    signal/cabstractprocessor.h \
+    signal/processor/csignalgetmax.h
 
 FORMS += \
     forms/hitmemainwindow.ui

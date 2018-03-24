@@ -46,6 +46,7 @@ CAccDisplay::CAccDisplay (QWidget *parent) :
     mainLayout->addWidget (m_chartView);
     setLayout (mainLayout);
 
+    m_chartView->setRubberBand (QChartView::RubberBand::HorizontalRubberBand);
 }
 
 CAccDisplay::~CAccDisplay()

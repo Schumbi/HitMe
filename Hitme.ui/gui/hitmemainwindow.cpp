@@ -48,6 +48,7 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     updateTimer.setInterval (50);
     valuesToShow = 15000;
     updateTimer.start();
+    ui->spinBox_duration->setValue (valuesToShow / 1000);
 
     enableUIInput (false);
 }
@@ -130,6 +131,10 @@ void HitmeMainWindow::updateUI()
         data_t toShow = m_sensor1->getLastValues (valuesToShow);
         // process date
         m_sigCalc->process (toShow);
+
+        double maxx = m_sigCalc->maxValue().x();
+        ui->lcdNumber_maxForce->display (maxx);
+
         // show data
         m_accdisplay->setData (toShow, min, max);
     }
@@ -212,4 +217,9 @@ void HitmeMainWindow::startCalibration()
     QTimer::singleShot (5000, this, SLOT (stopCalibration()));
 
     this->enableUIInput (false);
+}
+
+void HitmeMainWindow::on_spinBox_duration_valueChanged (int numToShow)
+{
+    valuesToShow = numToShow * 1000;
 }

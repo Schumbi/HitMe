@@ -5,6 +5,7 @@
 
 #include "processor/csignalabsbiasremover.h"
 #include "processor/csignalrectifier.h"
+#include "processor/csignalgetmax.h"
 
 #include <math.h>
 
@@ -40,6 +41,11 @@ QVector3D CSignalProcessingPrivate::bias() const
     return m_bias;
 }
 
+QVector3D CSignalProcessingPrivate::maxValue() const
+{
+    return m_maxValue;
+}
+
 void CSignalProcessingPrivate::calibrate (const data_t &data)
 {
     foreach (auto s, data)
@@ -72,10 +78,17 @@ CSignalProcessingPrivate::CSignalProcessingPrivate (CSignalProcessing *p)
     : QObject (p), p (p),
       m_bias (QVector3D (0, 0, 0)),
       m_isCalibrating (false),
+      m_maxValue (QVector3D (0, 0, 0)),
       m_conversionFactor (1.0)
 {
     procList.append (new CSignalAbsBiasRemover (p));
     procList.append (new CSignalRectifier (p));
+    auto max = new CSignalGetMax (p);
+    procList.append (max);
+
+    connect (max, &signal::CSignalGetMax::maxValue,
+             this, &CSignalProcessingPrivate::setMaxValue);
+
 }
 
 CSignalProcessingPrivate::~CSignalProcessingPrivate()
@@ -115,4 +128,9 @@ void CSignalProcessingPrivate::setCalibrating (bool isCalibrating)
     {
         this->tempStorage.reserve (maxTempStorage);
     }
+}
+
+void CSignalProcessingPrivate::setMaxValue (QVector3D val)
+{
+    m_maxValue = val;
 }
