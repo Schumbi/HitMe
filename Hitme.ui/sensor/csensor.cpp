@@ -98,6 +98,11 @@ int CSensor::getSizeOfStorage()
     return d->getSizeOfStorage();
 }
 
+const CAccStorage &CSensor::getStorage()
+{
+    return d->accStorage();
+}
+
 bool CSensor::setGRange (GRange_e val)
 {
     bool suc = true;

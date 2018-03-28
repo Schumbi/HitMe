@@ -210,6 +210,11 @@ int CSensorPrivate::getSizeOfStorage()
     return m_storage.size();
 }
 
+const CAccStorage &CSensorPrivate::accStorage()
+{
+    return m_storage;
+}
+
 void CSensorPrivate::sendCtrlPkg (const QByteArray& data)
 {
     QNetworkDatagram datagram;

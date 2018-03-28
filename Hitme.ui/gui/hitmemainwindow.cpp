@@ -45,10 +45,12 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
              this, &HitmeMainWindow::updateUI);
 
     // ui update
-    updateTimer.setInterval (50);
+    updateTimer.setInterval (0);
     valuesToShow = 15000;
     updateTimer.start();
     ui->spinBox_duration->setValue (valuesToShow / 1000);
+    ui->spinBox_duration->setMaximum (
+        m_sensor1->getStorage().getMaxmeasurementtime_Sec());
 
     enableUIInput (false);
 }
@@ -129,6 +131,27 @@ void HitmeMainWindow::updateUI()
         m_sigCalc->setConversionFactor (fac);
         // retrieve data from sensor
         data_t toShow = m_sensor1->getLastValues (valuesToShow);
+
+        diff.append (m_sensor1->getStorage().getPkgtimeDiff());
+        double middle = 0;
+
+        foreach (auto val, diff)
+        {
+            middle += val;
+        }
+
+        middle /= diff.size();
+
+        if (diff.size() >= 1000)
+        {
+            diff.removeFirst();
+        }
+
+
+        ui->label_debMsg->setText (QString ("m: %1 pd: %2")
+                                   .arg (qRound (middle / 1000.0))
+                                   .arg (m_sensor1->getStorage().getPCtrDiff()));
+
         // process date
         m_sigCalc->process (toShow);
 
@@ -222,4 +245,5 @@ void HitmeMainWindow::startCalibration()
 void HitmeMainWindow::on_spinBox_duration_valueChanged (int numToShow)
 {
     valuesToShow = numToShow * 1000;
+
 }

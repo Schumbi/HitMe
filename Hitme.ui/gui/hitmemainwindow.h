@@ -19,6 +19,8 @@ class HitmeMainWindow final : public QMainWindow {
     Q_OBJECT
 
 private:
+    QVector<unsigned int> diff;
+
     QTimer caliTimer;
     bool calibrating;
     // timer that control update frequency of data in ui

@@ -53,6 +53,8 @@ public:
     data_t getLastValues (int count);
     // get size of storage
     int getSizeOfStorage();
+    // for debugging
+    const CAccStorage& accStorage();
 
 private:
     QTimer m_reconnectTimer;

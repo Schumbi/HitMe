@@ -5,38 +5,88 @@
 #include <cmath>
 #include <QDebug>
 
-constexpr int maxStorageSize = 1000 * 60 * 5;
-
-CAccStorage::CAccStorage (QObject *parent) : QObject (parent)
+CAccStorage::CAccStorage (QObject *parent,
+                          int frstMeasurment_sec,
+                          int period) : QObject (parent)
 {
+    m_lastTime = 0;
+    m_pCtrDiff = 0;
+    m_pkgtimeDiff = 0;
+    m_samplingFrequ = period;
     m_meanPeriod = 0;
     m_packetCtr = 0;
     m_maxdiff = 0;
     m_mindiff = 0;
+
+    setMaxmeasurementtime_Sec (frstMeasurment_sec);
     resetToZero();
+}
+
+unsigned int CAccStorage::getMaxmeasurementtime_Sec() const
+{
+    return m_maxmeasurementSamples / m_samplingFrequ;
+}
+
+void CAccStorage::setMaxmeasurementtime_Sec (unsigned int
+        maxmeasurementtime_Sec)
+{
+    m_maxmeasurementSamples = maxmeasurementtime_Sec * m_samplingFrequ;
+    resetToZero();
+}
+
+unsigned int CAccStorage::getFs() const
+{
+    return m_samplingFrequ;
+}
+
+void CAccStorage::setFs (unsigned int period)
+{
+    // adapt measurementtime to new period
+    auto tmp = getMaxmeasurementtime_Sec();
+    m_samplingFrequ = period;
+    setMaxmeasurementtime_Sec (tmp);
+}
+
+unsigned int CAccStorage::getPkgtimeDiff() const
+{
+    return m_pkgtimeDiff;
+}
+
+void CAccStorage::setPkgtimeDiff (unsigned int pkgtimeDiff)
+{
+    m_pkgtimeDiff = pkgtimeDiff;
+}
+
+unsigned int CAccStorage::getPCtrDiff() const
+{
+    return m_pCtrDiff;
 }
 
 void CAccStorage::processNewData (const CSensorData &newdata)
 {
+    if (m_packetCtr == 0 || newdata.id() == 0)
+    {
+        m_packetCtr = newdata.id();
+    }
+
+    // detect lost packages
+    m_pCtrDiff = m_packetCtr - newdata.id();
+
     auto start = newdata.startTime();
-    auto end = newdata.endTime();
+    auto current_end = newdata.endTime();
     auto total = newdata.size();
-    double period = (end - start) / static_cast<double> (total);
+    double period = (current_end - start) / static_cast<double> (total);
+
+    m_pkgtimeDiff = start - m_lastTime;
+    m_lastTime = start;
 
     m_packetCtr++;
-    m_meanPeriod += period;
-    m_meanPeriod /= 2;
-
-
-    double c = period - m_meanPeriod;
-    m_maxdiff = qMax (m_maxdiff, c);
-    m_mindiff = qMin (m_mindiff, c);
 
     for (int ctr = 0; ctr < total; ctr++)
     {
-        if (m_storage.size() >= maxStorageSize)
+        if (static_cast<unsigned int> (m_storage.size()) >= m_maxmeasurementSamples)
         {
-            int diff = m_storage.size() - maxStorageSize;
+            int diff = m_storage.size() - m_maxmeasurementSamples;
             m_storage.remove (0, diff);
         }
 
@@ -50,7 +100,7 @@ void CAccStorage::processNewData (const CSensorData &newdata)
 void CAccStorage::resetToZero()
 {
     m_storage.clear();
-    m_storage.reserve (maxStorageSize);
+    m_storage.reserve (m_maxmeasurementSamples);
 }
 
 double CAccStorage::meanPeriod() const

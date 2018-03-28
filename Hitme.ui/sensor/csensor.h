@@ -43,6 +43,8 @@ public:
     void deleteMessages();
     data_t getLastValues (int count);
     int getSizeOfStorage();
+    // for debuging
+    const CAccStorage& getStorage();
 
 public slots:
     bool setGRange (GRange_e val);
