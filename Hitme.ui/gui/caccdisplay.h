@@ -10,7 +10,8 @@
 
 #include <caccstorage.h>
 
-class CAccDisplay : public QWidget {
+class CAccDisplay : public QWidget
+{
 
     Q_OBJECT
 
@@ -23,12 +24,12 @@ private:
     QtCharts::QChartView *m_chartView;
 
 public:
-    explicit CAccDisplay (QWidget *parent = 0);
+    explicit CAccDisplay ( QWidget *parent = 0 );
     ~CAccDisplay();
 
 public slots:
-    void setData (const data_t &data, double ymin, double ymax,
-                  const double timeStretch = 1000000);
+    void setData ( const data_t &data, double ymin, double ymax,
+                   const double timeStretch = 1000000 );
 
 };
 

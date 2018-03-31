@@ -5,12 +5,14 @@
 #include <QObject>
 #include <QList>
 
-namespace signal {
+namespace signal
+{
 
 class CSignalProcessing;
 class CAbstractProcessor;
 
-class CSignalProcessingPrivate final : public QObject {
+class CSignalProcessingPrivate final : public QObject
+{
 
     Q_OBJECT
 
@@ -25,15 +27,15 @@ class CSignalProcessingPrivate final : public QObject {
     // required storage to calculate biases
     QVector<QVector3D> tempStorage;
     // calibration function
-    void calibrate (const data_t &data);
+    void calibrate ( const data_t &data );
     double m_conversionFactor;
-    QList<CAbstractProcessor*> procList;
+    QList<CAbstractProcessor *> procList;
 
 public:
-    explicit CSignalProcessingPrivate (CSignalProcessing *p);
+    explicit CSignalProcessingPrivate ( CSignalProcessing *p );
     virtual ~CSignalProcessingPrivate();
     // process any data
-    void process (data_t &data);
+    void process ( data_t &data );
     // return calibration state
     bool isCalibrating() const;
     // return bias
@@ -41,14 +43,14 @@ public:
     QVector3D maxValue() const;
 
     double conversionFactor() const;
-    void setConversionFactor (double conversionFactor);
+    void setConversionFactor ( double conversionFactor );
 
 public slots:
     // control calibration state
-    void setCalibrating (bool m_isCalibrating);
+    void setCalibrating ( bool m_isCalibrating );
 
 protected slots:
-    void setMaxValue (QVector3D val);
+    void setMaxValue ( QVector3D val );
 };
 
 }

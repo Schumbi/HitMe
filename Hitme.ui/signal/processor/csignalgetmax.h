@@ -5,21 +5,23 @@
 
 #include "../cabstractprocessor.h"
 
-namespace signal {
+namespace signal
+{
 
-class CSignalGetMax : public CAbstractProcessor {
+class CSignalGetMax : public CAbstractProcessor
+{
 
     Q_OBJECT
 
 public:
-    explicit CSignalGetMax (CSignalProcessing *p);
+    explicit CSignalGetMax ( CSignalProcessing *p );
 
 signals:
-    void maxValue (QVector3D max);
+    void maxValue ( QVector3D max );
 
     // CAbstractProcessor interface
 protected:
-    virtual void changeData (data_t &data);
+    virtual void changeData ( data_t &data );
 };
 
 }

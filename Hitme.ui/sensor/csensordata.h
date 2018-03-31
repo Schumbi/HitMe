@@ -7,7 +7,8 @@
 
 #include <cstdint>
 
-class CSensorData : public QList<QVector3D> {
+class CSensorData : public QList<QVector3D>
+{
 
 private:
     quint32 m_startTime;
@@ -16,21 +17,21 @@ private:
 
 public:
     CSensorData();
-    CSensorData (const CSensorData &other);
+    CSensorData ( const CSensorData &other );
 
-    void setStartTimestamp (const quint32 &time);
+    void setStartTimestamp ( const quint32 &time );
     quint32 startTime() const;
 
-    void setEndTimestamp (const quint32 &time);
+    void setEndTimestamp ( const quint32 &time );
     quint32 endTime() const;
 
-    void setId (const quint32 &id);
+    void setId ( const quint32 &id );
     quint32 id() const;
 
 };
 
-Q_DECLARE_METATYPE (CSensorData);
+Q_DECLARE_METATYPE ( CSensorData );
 
-QDebug operator<< (QDebug dbg, const CSensorData &message);
+QDebug operator<< ( QDebug dbg, const CSensorData &message );
 
 #endif // CSENSORDATA_H

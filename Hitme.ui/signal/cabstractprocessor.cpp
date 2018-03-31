@@ -4,17 +4,17 @@
 
 using namespace signal;
 
-CAbstractProcessor::CAbstractProcessor (CSignalProcessing *p)
-    : QObject (p),
-      p (p)
+CAbstractProcessor::CAbstractProcessor(CSignalProcessing *p)
+    : QObject(p),
+      p(p)
 {
-    assert (p != nullptr);
+    assert(p != nullptr);
 }
 
 CAbstractProcessor::~CAbstractProcessor()
 {}
 
-void CAbstractProcessor::process (data_t &data)
+void CAbstractProcessor::process(data_t &data)
 {
-    changeData (data);
+    changeData(data);
 }

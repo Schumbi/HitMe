@@ -4,21 +4,23 @@
 #include <QObject>
 #include <csignalprocessing.h>
 
-namespace signal {
+namespace signal
+{
 
-class CAbstractProcessor : public QObject {
+class CAbstractProcessor : public QObject
+{
     Q_OBJECT
 
 protected:
     CSignalProcessing *p;
 
-    virtual void changeData (data_t &data) = 0;
+    virtual void changeData ( data_t &data ) = 0;
 
 public:
-    explicit CAbstractProcessor (CSignalProcessing *p = nullptr);
+    explicit CAbstractProcessor ( CSignalProcessing *p = nullptr );
     virtual ~CAbstractProcessor();
 
-    void process (data_t& data);
+    void process ( data_t &data );
 
 };
 

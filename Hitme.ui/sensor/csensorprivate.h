@@ -10,35 +10,37 @@
 
 #include "caccstorage.h"
 
-namespace sensor {
+namespace sensor
+{
 
 class CSensor;
 
-class CSensorPrivate : public QObject {
+class CSensorPrivate : public QObject
+{
 
     Q_OBJECT
 
 public:
-    explicit CSensorPrivate (const QString &ip,
-                             quint32 controlPort,
-                             quint32 dataPort,
-                             CSensor* p,
-                             QObject* parent = nullptr);
+    explicit CSensorPrivate ( const QString &ip,
+                              quint32 controlPort,
+                              quint32 dataPort,
+                              CSensor *p,
+                              QObject *parent = nullptr );
     // sensor id
     quint16 id() const;
     // device ip of the sensor (used as a filter for packages)
     QString ip() const;
     // sensors internal bandwidth (filter of sensor)
     BMA020BANDWIDTH bw() const;
-    void setBW (BMA020BANDWIDTH val);
+    void setBW ( BMA020BANDWIDTH val );
     // sensors sensitivity
     BMA020RANGE range() const;
-    void setRange (BMA020RANGE val);
+    void setRange ( BMA020RANGE val );
     // start sensor
     bool startedSensor() const;
-    void setStartSensor (bool start);
+    void setStartSensor ( bool start );
     // connect to the sensor and return succes
-    bool tryReconnect (const QString& ip);
+    bool tryReconnect ( const QString &ip );
     // get connection state
     bool isConnected() const;
     // last error message
@@ -50,17 +52,17 @@ public:
     // create a package
     void createCtrlPackage();
     // return last data from count to end
-    data_t getLastValues (int count);
+    data_t getLastValues ( int count );
     // get size of storage
     int getSizeOfStorage();
     // for debugging
-    const CAccStorage& accStorage();
+    const CAccStorage &accStorage();
 
 private:
     QTimer m_reconnectTimer;
     quint64 m_lastMillis;
 
-    CSensor* p;
+    CSensor *p;
     // is BMA readable
     bool m_bmaReadable;
     // sensor id
@@ -93,11 +95,11 @@ private:
     // connect to sensor (listen on ports for udp traffic)
     bool reconnect();
     // sensors status from message
-    bool processStatusMessage (const QJsonObject& o);
+    bool processStatusMessage ( const QJsonObject &o );
     // process sensors answer
-    bool processAnswer (const QJsonObject& o);
+    bool processAnswer ( const QJsonObject &o );
     // send commands to sensor
-    void sendCtrlPkg (const QByteArray& data);
+    void sendCtrlPkg ( const QByteArray &data );
 
 private slots:
     void checkConnection();
@@ -108,9 +110,9 @@ public slots:
     // readyRead data
     void gotDataPackage();
     // slot for sensor control packages
-    void processCtrlPackage (const QByteArray& data);
+    void processCtrlPackage ( const QByteArray &data );
     // slot for sensor's data packages
-    void processDataPackage (const QByteArray& data);
+    void processDataPackage ( const QByteArray &data );
 };
 
 }

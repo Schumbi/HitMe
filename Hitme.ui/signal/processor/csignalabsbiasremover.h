@@ -4,14 +4,16 @@
 #include <QObject>
 #include "../cabstractprocessor.h"
 
-namespace signal {
+namespace signal
+{
 
-class CSignalAbsBiasRemover : public CAbstractProcessor {
+class CSignalAbsBiasRemover : public CAbstractProcessor
+{
 
     Q_OBJECT
 
 public:
-    explicit CSignalAbsBiasRemover (CSignalProcessing *parent = nullptr);
+    explicit CSignalAbsBiasRemover ( CSignalProcessing *parent = nullptr );
 
 signals:
 
@@ -19,7 +21,7 @@ public slots:
 
     // AbstractProcessor interface
 protected:
-    virtual void changeData (data_t &data);
+    virtual void changeData ( data_t &data );
 };
 
 }

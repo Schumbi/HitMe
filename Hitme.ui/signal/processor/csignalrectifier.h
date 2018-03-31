@@ -3,17 +3,19 @@
 
 #include "../cabstractprocessor.h"
 
-namespace signal {
+namespace signal
+{
 
-class CSignalRectifier : public  CAbstractProcessor {
+class CSignalRectifier : public  CAbstractProcessor
+{
 
 public:
-    CSignalRectifier (CSignalProcessing *parent = nullptr);
+    CSignalRectifier ( CSignalProcessing *parent = nullptr );
 
     // AbstractProcessor interface
 protected:
 
-    virtual void changeData (data_t &data);
+    virtual void changeData ( data_t &data );
 };
 
 }

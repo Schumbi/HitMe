@@ -3,9 +3,11 @@
 
 #include <QString>
 
-namespace sensor {
+namespace sensor
+{
 
-class CSensorConfig {
+class CSensorConfig
+{
 public:
     CSensorConfig()
     {
@@ -13,10 +15,10 @@ public:
         udpControlPort = 10001;
         udpDataPort = 10000;
     }
-    CSensorConfig (const QString &ip,
-                   quint32 controlPort = 10001,
-                   quint32 dataPort = 10000) :
-        ip (ip), udpControlPort (controlPort), udpDataPort (dataPort)
+    CSensorConfig ( const QString &ip,
+                    quint32 controlPort = 10001,
+                    quint32 dataPort = 10000 ) :
+        ip ( ip ), udpControlPort ( controlPort ), udpDataPort ( dataPort )
     {}
     QString ip;
     quint32 udpControlPort;

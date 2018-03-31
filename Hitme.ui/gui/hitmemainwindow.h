@@ -8,13 +8,15 @@
 #include <csensor.h>
 #include <csignalprocessing.h>
 
-namespace Ui {
+namespace Ui
+{
 class HitmeMainWindow;
 }
 
 class CAccDisplay;
 
-class HitmeMainWindow final : public QMainWindow {
+class HitmeMainWindow final : public QMainWindow
+{
 
     Q_OBJECT
 
@@ -28,9 +30,9 @@ private:
     // state to show if measurement is enabled
     bool accEnabled;
     // a sensor
-    sensor::CSensor* m_sensor1;
+    sensor::CSensor *m_sensor1;
     // the calculator
-    signal::CSignalProcessing* m_sigCalc;
+    signal::CSignalProcessing *m_sigCalc;
     // a display widget
     CAccDisplay *m_accdisplay;
     // number of values to show in ui widgeht
@@ -39,7 +41,7 @@ private:
     QVector3D m_dataBias;
 
 public:
-    explicit HitmeMainWindow (QWidget *parent = 0);
+    explicit HitmeMainWindow ( QWidget *parent = 0 );
     ~HitmeMainWindow();
 
 protected slots:
@@ -55,20 +57,20 @@ private slots:
     // start sensor
     void on_pushButton_startstop_clicked();
     // set sensitivity
-    void on_comboBox_sensitivity_currentIndexChanged (int index);
+    void on_comboBox_sensitivity_currentIndexChanged ( int index );
     // set sensors internal filter bandwidth
-    void on_comboBox_bandwidth_currentIndexChanged (int index);
+    void on_comboBox_bandwidth_currentIndexChanged ( int index );
     // enable/disable sensor input fields in ui
-    void enableUIInput (bool enable);
+    void enableUIInput ( bool enable );
     // calibrate data from sensor
-    void calibratedData (QVector3D biases);
+    void calibratedData ( QVector3D biases );
 
     void on_pushButton_calibration_clicked();
 
     void stopSensor();
     void startSensor();
 
-    void on_spinBox_duration_valueChanged (int arg1);
+    void on_spinBox_duration_valueChanged ( int arg1 );
 
 private:
     Ui::HitmeMainWindow *ui;

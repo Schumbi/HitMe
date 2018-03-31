@@ -5,9 +5,9 @@
 #include <cmath>
 #include <QDebug>
 
-CAccStorage::CAccStorage (QObject *parent,
-                          int frstMeasurment_sec,
-                          int period) : QObject (parent)
+CAccStorage::CAccStorage(QObject *parent,
+                         int frstMeasurment_sec,
+                         int period) : QObject(parent)
 {
     m_lastTime = 0;
     m_pCtrDiff = 0;
@@ -18,7 +18,7 @@ CAccStorage::CAccStorage (QObject *parent,
     m_maxdiff = 0;
     m_mindiff = 0;
 
-    setMaxmeasurementtime_Sec (frstMeasurment_sec);
+    setMaxmeasurementtime_Sec(frstMeasurment_sec);
     resetToZero();
 }
 
@@ -27,7 +27,7 @@ unsigned int CAccStorage::getMaxmeasurementtime_Sec() const
     return m_maxmeasurementSamples / m_samplingFrequ;
 }
 
-void CAccStorage::setMaxmeasurementtime_Sec (unsigned int
+void CAccStorage::setMaxmeasurementtime_Sec(unsigned int
         maxmeasurementtime_Sec)
 {
     m_maxmeasurementSamples = maxmeasurementtime_Sec * m_samplingFrequ;
@@ -39,12 +39,12 @@ unsigned int CAccStorage::getFs() const
     return m_samplingFrequ;
 }
 
-void CAccStorage::setFs (unsigned int period)
+void CAccStorage::setFs(unsigned int period)
 {
     // adapt measurementtime to new period
     auto tmp = getMaxmeasurementtime_Sec();
     m_samplingFrequ = period;
-    setMaxmeasurementtime_Sec (tmp);
+    setMaxmeasurementtime_Sec(tmp);
 }
 
 unsigned int CAccStorage::getPkgtimeDiff() const
@@ -52,7 +52,7 @@ unsigned int CAccStorage::getPkgtimeDiff() const
     return m_pkgtimeDiff;
 }
 
-void CAccStorage::setPkgtimeDiff (unsigned int pkgtimeDiff)
+void CAccStorage::setPkgtimeDiff(unsigned int pkgtimeDiff)
 {
     m_pkgtimeDiff = pkgtimeDiff;
 }
@@ -62,10 +62,9 @@ unsigned int CAccStorage::getPCtrDiff() const
     return m_pCtrDiff;
 }
 
-void CAccStorage::processNewData (const CSensorData &newdata)
+void CAccStorage::processNewData(const CSensorData &newdata)
 {
-    if (m_packetCtr == 0 || newdata.id() == 0)
-    {
+    if (m_packetCtr == 0 || newdata.id() == 0) {
         m_packetCtr = newdata.id();
     }
 
@@ -75,23 +74,22 @@ void CAccStorage::processNewData (const CSensorData &newdata)
     auto start = newdata.startTime();
     auto current_end = newdata.endTime();
     auto total = newdata.size();
-    double period = (current_end - start) / static_cast<double> (total);
+    double period = (current_end - start) / static_cast<double>(total);
 
     m_pkgtimeDiff = start - m_lastTime;
     m_lastTime = start;
 
     m_packetCtr++;
 
-    for (int ctr = 0; ctr < total; ctr++)
-    {
-        if (static_cast<unsigned int> (m_storage.size()) >= m_maxmeasurementSamples)
-        {
+    for (int ctr = 0; ctr < total; ctr++) {
+        if (static_cast<unsigned int>(m_storage.size()) >=
+                m_maxmeasurementSamples) {
             int diff = m_storage.size() - m_maxmeasurementSamples;
-            m_storage.remove (0, diff);
+            m_storage.remove(0, diff);
         }
 
-        QVector4D datum (newdata[ctr], start + (period * ctr));
-        m_storage.append (datum);
+        QVector4D datum(newdata[ctr], start + (period * ctr));
+        m_storage.append(datum);
     }
 
     // qDebug() << *this;
@@ -100,7 +98,7 @@ void CAccStorage::processNewData (const CSensorData &newdata)
 void CAccStorage::resetToZero()
 {
     m_storage.clear();
-    m_storage.reserve (m_maxmeasurementSamples);
+    m_storage.reserve(m_maxmeasurementSamples);
 }
 
 double CAccStorage::meanPeriod() const
@@ -133,32 +131,29 @@ data_t CAccStorage::storage() const
     return m_storage;
 }
 
-data_t CAccStorage::getLastValues (int count) const
+data_t CAccStorage::getLastValues(int count) const
 {
     data_t res;
 
-    if (m_storage.size() < count)
-    {
-        for (int ctr = 0; ctr < m_storage.size(); ctr++)
-        {
-            res.append (m_storage[ctr]);
+    if (m_storage.size() < count) {
+        for (int ctr = 0; ctr < m_storage.size(); ctr++) {
+            res.append(m_storage[ctr]);
         }
 
         return res;
     }
 
-    res.reserve (count);
+    res.reserve(count);
     int cnt = m_storage.size() - count;
 
-    for (; cnt < m_storage.size(); cnt++)
-    {
-        res.append (m_storage[cnt]);
+    for (; cnt < m_storage.size(); cnt++) {
+        res.append(m_storage[cnt]);
     }
 
     return res;
 }
 
-quint32 CAccStorage::addRawData (const QByteArray &data)
+quint32 CAccStorage::addRawData(const QByteArray &data)
 {
     CAccDataConverter::conv32_t conv32;
     CAccDataConverter::conv16_t conv16;
@@ -172,7 +167,7 @@ quint32 CAccStorage::addRawData (const QByteArray &data)
     conv32.val8x4[1] = data[1];
     conv32.val8x4[2] = data[2];
     conv32.val8x4[3] = data[3];
-    accData.setStartTimestamp (conv32.val32x1);
+    accData.setStartTimestamp(conv32.val32x1);
     // data[0] LSB
     // data[1]
     // data[2]
@@ -181,7 +176,7 @@ quint32 CAccStorage::addRawData (const QByteArray &data)
     conv32.val8x4[1] = data[5];
     conv32.val8x4[2] = data[6];
     conv32.val8x4[3] = data[7];
-    accData.setEndTimestamp (conv32.val32x1);
+    accData.setEndTimestamp(conv32.val32x1);
     quint32 endTime = conv32.val32x1;
     // data[4] LSB
     // data[5]
@@ -191,11 +186,10 @@ quint32 CAccStorage::addRawData (const QByteArray &data)
     conv32.val8x4[1] = data[9];
     conv32.val8x4[2] = data[10];
     conv32.val8x4[3] = data[11];
-    accData.setId (conv32.val32x1);
+    accData.setId(conv32.val32x1);
 
     // extract data
-    for (int ctr = 12; ctr < (data.size() - 6); ctr += 6)
-    {
+    for (int ctr = 12; ctr < (data.size() - 6); ctr += 6) {
         conv16.data8x2[0] = data[ctr + 0];
         conv16.data8x2[1] = data[ctr + 1];
         uint16_t rawx = conv16.data16x1;
@@ -205,11 +199,11 @@ quint32 CAccStorage::addRawData (const QByteArray &data)
         conv16.data8x2[0] = data[ctr + 4];
         conv16.data8x2[1] = data[ctr + 5];
         uint16_t rawz = conv16.data16x1;
-        auto accValues = CAccDataConverter (rawx, rawy, rawz);
-        accData.append (QVector3D (accValues.x(), accValues.y(), accValues.z()));
+        auto accValues = CAccDataConverter(rawx, rawy, rawz);
+        accData.append(QVector3D(accValues.x(), accValues.y(), accValues.z()));
     }
 
-    processNewData (accData);
+    processNewData(accData);
     return endTime;
 }
 
