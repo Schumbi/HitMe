@@ -6,6 +6,7 @@
 #include "processor/csignalabsbiasremover.h"
 #include "processor/csignalrectifier.h"
 #include "processor/csignalgetmax.h"
+#include "processor/csignalmaxrecorder.h"
 
 #include <math.h>
 
@@ -81,6 +82,9 @@ CSignalProcessingPrivate::CSignalProcessingPrivate (CSignalProcessing *p)
       m_maxValue (QVector3D (0, 0, 0)),
       m_conversionFactor (1.0)
 {
+    auto rec = new CSignalMaxRecorder (p);
+    rec->setMaxCtr (2);
+    procList.append (rec);
     procList.append (new CSignalAbsBiasRemover (p));
     procList.append (new CSignalRectifier (p));
     auto max = new CSignalGetMax (p);
