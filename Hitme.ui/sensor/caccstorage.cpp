@@ -6,8 +6,8 @@
 #include <QDebug>
 
 CAccStorage::CAccStorage(QObject *parent,
-                         int frstMeasurment_sec,
-                         int period) : QObject(parent)
+                         unsigned int frstMeasurment_sec,
+                         unsigned int period) : QObject(parent)
 {
     m_lastTime = 0;
     m_pCtrDiff = 0;
@@ -22,15 +22,18 @@ CAccStorage::CAccStorage(QObject *parent,
     resetToZero();
 }
 
-unsigned int CAccStorage::getMaxmeasurementtime_Sec() const
+unsigned int CAccStorage::getMaxmeasurementtime_Sec()
+const
 {
     return m_maxmeasurementSamples / m_samplingFrequ;
 }
 
-void CAccStorage::setMaxmeasurementtime_Sec(unsigned int
+void CAccStorage::setMaxmeasurementtime_Sec(unsigned
+        int
         maxmeasurementtime_Sec)
 {
-    m_maxmeasurementSamples = maxmeasurementtime_Sec * m_samplingFrequ;
+    m_maxmeasurementSamples = maxmeasurementtime_Sec *
+                              m_samplingFrequ;
     resetToZero();
 }
 
@@ -52,7 +55,8 @@ unsigned int CAccStorage::getPkgtimeDiff() const
     return m_pkgtimeDiff;
 }
 
-void CAccStorage::setPkgtimeDiff(unsigned int pkgtimeDiff)
+void CAccStorage::setPkgtimeDiff(unsigned int
+                                 pkgtimeDiff)
 {
     m_pkgtimeDiff = pkgtimeDiff;
 }
@@ -62,7 +66,8 @@ unsigned int CAccStorage::getPCtrDiff() const
     return m_pCtrDiff;
 }
 
-void CAccStorage::processNewData(const CSensorData &newdata)
+void CAccStorage::processNewData(const CSensorData
+                                 &newdata)
 {
     if (m_packetCtr == 0 || newdata.id() == 0) {
         m_packetCtr = newdata.id();
@@ -74,7 +79,8 @@ void CAccStorage::processNewData(const CSensorData &newdata)
     auto start = newdata.startTime();
     auto current_end = newdata.endTime();
     auto total = newdata.size();
-    double period = (current_end - start) / static_cast<double>(total);
+    double period = (current_end - start) /
+                    static_cast<double>(total);
 
     m_pkgtimeDiff = start - m_lastTime;
     m_lastTime = start;
@@ -82,13 +88,16 @@ void CAccStorage::processNewData(const CSensorData &newdata)
     m_packetCtr++;
 
     for (int ctr = 0; ctr < total; ctr++) {
-        if (static_cast<unsigned int>(m_storage.size()) >=
+        if (static_cast<unsigned int>(m_storage.size())
+                >=
                 m_maxmeasurementSamples) {
-            int diff = m_storage.size() - m_maxmeasurementSamples;
+            int diff = m_storage.size() -
+                       m_maxmeasurementSamples;
             m_storage.remove(0, diff);
         }
 
-        QVector4D datum(newdata[ctr], start + (period * ctr));
+        QVector4D datum(newdata[ctr], start +
+                        (period * ctr));
         m_storage.append(datum);
     }
 
@@ -136,7 +145,8 @@ data_t CAccStorage::getLastValues(int count) const
     data_t res;
 
     if (m_storage.size() < count) {
-        for (int ctr = 0; ctr < m_storage.size(); ctr++) {
+        for (int ctr = 0; ctr < m_storage.size();
+                ctr++) {
             res.append(m_storage[ctr]);
         }
 
@@ -156,8 +166,6 @@ data_t CAccStorage::getLastValues(int count) const
 quint32 CAccStorage::addRawData(const QByteArray &data)
 {
     CAccDataConverter::conv32_t conv32;
-    CAccDataConverter::conv16_t conv16;
-
     CSensorData accData;
     // data[0] LSB
     // data[1]
@@ -189,6 +197,7 @@ quint32 CAccStorage::addRawData(const QByteArray &data)
     accData.setId(conv32.val32x1);
 
     // extract data
+    CAccDataConverter::conv16_t conv16;
     for (int ctr = 12; ctr < (data.size() - 6); ctr += 6) {
         conv16.data8x2[0] = data[ctr + 0];
         conv16.data8x2[1] = data[ctr + 1];
@@ -200,7 +209,9 @@ quint32 CAccStorage::addRawData(const QByteArray &data)
         conv16.data8x2[1] = data[ctr + 5];
         uint16_t rawz = conv16.data16x1;
         auto accValues = CAccDataConverter(rawx, rawy, rawz);
-        accData.append(QVector3D(accValues.x(), accValues.y(), accValues.z()));
+        accData.append(QVector3D(accValues.x(),
+                                 accValues.y(),
+                                 accValues.z()));
     }
 
     processNewData(accData);
@@ -218,3 +229,4 @@ QDebug operator<< (QDebug dbg, const CAccStorage &data)
     dbg.maybeSpace();
     return dbg;
 }
+

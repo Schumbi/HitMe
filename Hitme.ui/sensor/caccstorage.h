@@ -1,6 +1,8 @@
 #ifndef CACCSTORAGE_H
 #define CACCSTORAGE_H
 
+#include <QDebug>
+
 #include <csensordata.h>
 #include <QObject>
 
@@ -13,6 +15,9 @@ class CAccStorage : public QObject
 {
 
     Q_OBJECT
+
+    static const unsigned int stdDuration_sec = 20;
+    static const unsigned int stdfs_Hz = 1000;
 
     data_t m_storage;
 
@@ -31,8 +36,8 @@ class CAccStorage : public QObject
 
 public:
     explicit CAccStorage ( QObject *parent = nullptr,
-                           int maxSamplingTime_sec = 20,
-                           int fs = 1000 );
+                           unsigned int maxDuration_sec = stdDuration_sec,
+                           unsigned int fs = stdfs_Hz );
 
     void resetToZero();
     quint32 addRawData ( const QByteArray &newdata );
