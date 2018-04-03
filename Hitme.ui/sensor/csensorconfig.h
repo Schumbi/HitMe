@@ -2,6 +2,7 @@
 #define CSENSORCONFIG_H
 
 #include <QString>
+#include "../../wlan.hpp"
 
 namespace sensor
 {
@@ -9,17 +10,19 @@ namespace sensor
 class CSensorConfig
 {
 public:
+
     CSensorConfig()
     {
-        ip = "192.168.1.7";
-        udpControlPort = 10001;
-        udpDataPort = 10000;
+        ip = HITME_STDSENSORIP;
+        udpControlPort = HITME_CTRLPORT;
+        udpDataPort = HITME_DATAPORT;
     }
     CSensorConfig ( const QString &ip,
-                    quint32 controlPort = 10001,
-                    quint32 dataPort = 10000 ) :
+                    quint32 controlPort = HITME_CTRLPORT,
+                    quint32 dataPort = HITME_DATAPORT ) :
         ip ( ip ), udpControlPort ( controlPort ), udpDataPort ( dataPort )
     {}
+
     QString ip;
     quint32 udpControlPort;
     quint32 udpDataPort;
