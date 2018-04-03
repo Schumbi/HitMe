@@ -36,18 +36,9 @@ public:
         m_z = transfromToData ( rawz );
     }
 
-    int x() const
-    {
-        return m_x;
-    }
-    int y()  const
-    {
-        return m_y;
-    }
-    int z()  const
-    {
-        return m_z;
-    }
+    int x() const;
+    int y()  const;
+    int z()  const;
 };
 
 

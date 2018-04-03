@@ -152,6 +152,7 @@ void HitmeMainWindow::updateUI()
 
         // show data
         m_accdisplay->setData(toShow, min, max);
+
     }
 
     ui->pushButton_calibration->setEnabled(accEnabled);

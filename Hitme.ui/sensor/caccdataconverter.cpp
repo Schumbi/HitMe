@@ -20,3 +20,19 @@ int16_t CAccDataConverter::transfromToData(uint16_t raw)
 
     return twoCompToDec(n, 10);
 }
+
+int CAccDataConverter::x() const
+{
+    return m_x;
+}
+
+int CAccDataConverter::y() const
+{
+    return m_y;
+}
+
+int CAccDataConverter::z() const
+{
+    return m_z;
+}
+
