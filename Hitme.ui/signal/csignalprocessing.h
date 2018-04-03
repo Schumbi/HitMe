@@ -5,15 +5,11 @@
 
 #include <caccstorage.h>
 
-#include <liquid/liquid.h>
-
-namespace signal
-{
+namespace signal {
 
 class CSignalProcessingPrivate;
 
-class CSignalProcessing : public QObject
-{
+class CSignalProcessing : public QObject {
 
     Q_OBJECT
 

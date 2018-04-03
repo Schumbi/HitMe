@@ -8,58 +8,58 @@
 namespace sensor
 {
 
-enum GRange_e {
-    G2,
-    G4,
-    G8
-};
+    enum GRange_e {
+        G2,
+        G4,
+        G8
+    };
 
-enum BandWidth_e {
-    BW_25HZ,  // (mean 23 Hz)
-    BW_100HZ, // (mean 94 Hz)
-    BW_750HZ, // (mean 750 Hz)
-    BW_1500HZ // (mean 1500 Hz)
-};
+    enum BandWidth_e {
+        BW_25HZ,  // (mean 23 Hz)
+        BW_100HZ, // (mean 94 Hz)
+        BW_750HZ, // (mean 750 Hz)
+        BW_1500HZ // (mean 1500 Hz)
+    };
 
-class CSensorPrivate;
+    class CSensorPrivate;
 
-class CSensor : public QObject
-{
+    class CSensor : public QObject
+    {
 
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    explicit CSensor ( const CSensorConfig &netconfig = CSensorConfig(),
-                       QObject *parent = nullptr );
+    public:
+        explicit CSensor ( const CSensorConfig &netconfig = CSensorConfig(),
+                           QObject *parent = nullptr );
 
-    quint8 id();
-    GRange_e range();
-    BandWidth_e bandwidth();
-    QString ip();
-    bool isOnline();
-    bool sensorStarted();
-    QString sensorMsg();
-    QString sensorErr();
-    void deleteMessages();
-    data_t getLastValues ( int count );
-    int getSizeOfStorage();
-    // for debuging
-    const CAccStorage &getStorage();
+        quint8 id();
+        GRange_e range();
+        BandWidth_e bandwidth();
+        QString ip();
+        bool isOnline();
+        bool sensorStarted();
+        QString sensorMsg();
+        QString sensorErr();
+        void deleteMessages();
+        data_t getLastValues ( int count );
+        int getSizeOfStorage();
+        // for debuging
+        const CAccStorage &getStorage();
 
-public slots:
-    bool setGRange ( GRange_e val );
-    bool setBandWidth ( BandWidth_e val );
-    void setStarted ( bool start );
+    public slots:
+        bool setGRange ( GRange_e val );
+        bool setBandWidth ( BandWidth_e val );
+        void setStarted ( bool start );
 
-signals:
-    void statusUpdate();
-    void connected ( bool bound );
-    void ctrlParseError ( const QString &err );
-    void dataParsed ();
+    signals:
+        void statusUpdate();
+        void connected ( bool bound );
+        void ctrlParseError ( const QString &err );
+        void dataParsed ();
 
-private:
-    CSensorPrivate *d;
-};
+    private:
+        CSensorPrivate *d;
+    };
 
 } // ns sensor
 #endif // CSENSOR_H

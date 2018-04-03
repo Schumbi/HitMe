@@ -5,11 +5,9 @@
 
 #include "../cabstractprocessor.h"
 
-namespace signal
-{
+namespace signal {
 
-class CSignalGetMax : public CAbstractProcessor
-{
+class CSignalGetMax : public CAbstractProcessor {
 
     Q_OBJECT
 

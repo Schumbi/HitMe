@@ -61,8 +61,3 @@ HEADERS += \
 
 FORMS += \
     forms/hitmemainwindow.ui
-
-unix:!macx: LIBS += -L$$PWD/../../../../../../usr/lib/ -lliquid
-
-INCLUDEPATH += $$PWD/../../../../../../usr/include/liquid
-DEPENDPATH += $$PWD/../../../../../../usr/include/liquid
