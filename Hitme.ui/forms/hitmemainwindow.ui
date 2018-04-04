@@ -194,13 +194,13 @@
                 <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
                </property>
                <property name="suffix">
-                <string> sec</string>
+                <string/>
                </property>
                <property name="prefix">
                 <string/>
                </property>
                <property name="minimum">
-                <number>5</number>
+                <number>1</number>
                </property>
                <property name="maximum">
                 <number>60</number>

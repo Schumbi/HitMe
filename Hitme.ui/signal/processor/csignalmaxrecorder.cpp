@@ -30,10 +30,12 @@ void writeToFile (const data_t &data)
     QDate d = QDate::currentDate();
     QTime t = QTime::currentTime();
 
-    QString dt = d.toString (Qt::DateFormat::ISODate) +
-                 t.toString (Qt::DateFormat::ISODate);
+    QString dt = QString ("%1_%2")
+                 .arg (d.toString (Qt::DateFormat::ISODate))
+                 .arg (t.toString (Qt::DateFormat::ISODate));
 
-    QFile file (dt + QString ("_%1").arg (data.at (0).w()));
+    QFile file (dt + QString ("_%1")
+                .arg (static_cast<quint64> (data.at (0).w())));
 
     if (!file.open (QIODevice::WriteOnly | QIODevice::Text))
     {
@@ -45,7 +47,7 @@ void writeToFile (const data_t &data)
     for (int ctr = 0; ctr < data.size(); ctr++)
     {
         auto c = data[ctr];
-        out << c.w() << ","
+        out << static_cast<quint64> (c.w()) << ","
             << c.x() << ","
             << c.y() << ","
             << c.z() << ';'
@@ -58,6 +60,11 @@ void writeToFile (const data_t &data)
 
 void CSignalMaxRecorder::changeData (data_t &data)
 {
+    if (!data.size())
+    {
+        return;
+    }
+
     const int pkgSize = m_pkgSize; // number of acc values per paket from sensor
     const int thresh = m_threshold; // threshold
     bool hasMax = false;
@@ -67,8 +74,8 @@ void CSignalMaxRecorder::changeData (data_t &data)
     if (gtTresh (data[mid], thresh ))
     {
         for (int ctr = mid;
-                ctr < data.size() - m_maxCtr &&
-                ctr < pkgSize;
+                (ctr < data.size() - m_maxCtr) &&
+                (ctr < mid + pkgSize);
                 ctr++)
         {
             hasMax = true;

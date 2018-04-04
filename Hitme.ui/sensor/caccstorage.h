@@ -11,13 +11,14 @@
 
 typedef QVector<QVector4D> data_t ;
 
-class CAccStorage : public QObject
-{
+class CAccStorage : public QObject {
 
     Q_OBJECT
 
     static const unsigned int stdDuration_sec = 20;
     static const unsigned int stdfs_Hz = 1000;
+
+    QVector<int> _periods;
 
     data_t m_storage;
 
@@ -33,6 +34,9 @@ class CAccStorage : public QObject
     unsigned int m_maxmeasurementSamples;
 
     void processNewData ( const CSensorData &newdata );
+
+signals:
+    void lostPackage();
 
 public:
     explicit CAccStorage ( QObject *parent = nullptr,

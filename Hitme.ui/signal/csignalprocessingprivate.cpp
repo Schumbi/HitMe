@@ -12,6 +12,36 @@
 
 using namespace signal;
 
+CSignalProcessingPrivate::CSignalProcessingPrivate (CSignalProcessing *p)
+    : QObject (p), p (p),
+      m_bias (QVector3D (0, 0, 0)),
+      m_isCalibrating (false),
+      m_maxValue (QVector3D (0, 0, 0)),
+      m_conversionFactor (1.0)
+{
+    m_maxIntervallBeforeWriteToFile = 2;
+
+    rec = new CSignalMaxRecorder (p);
+    rec->setMaxCtr (maxIntervallBeforeWriteToFile());
+    procList.append (rec);
+//    procList.append (new CSignalAbsBiasRemover (p));
+//    procList.append (new CSignalRectifier (p));
+//    auto max = new CSignalGetMax (p);
+//    procList.append (max);
+
+//    connect (max, &signal::CSignalGetMax::maxValue,
+//             this, &CSignalProcessingPrivate::setMaxValue);
+
+}
+
+CSignalProcessingPrivate::~CSignalProcessingPrivate()
+{
+    foreach (auto s, procList)
+    {
+        delete s;
+    }
+}
+
 QVector3D mean (const QVector<QVector3D> &in)
 {
     int size = in.size();
@@ -75,34 +105,6 @@ void CSignalProcessingPrivate::setConversionFactor (double conversionFactor)
     m_conversionFactor = conversionFactor;
 }
 
-CSignalProcessingPrivate::CSignalProcessingPrivate (CSignalProcessing *p)
-    : QObject (p), p (p),
-      m_bias (QVector3D (0, 0, 0)),
-      m_isCalibrating (false),
-      m_maxValue (QVector3D (0, 0, 0)),
-      m_conversionFactor (1.0)
-{
-    auto rec = new CSignalMaxRecorder (p);
-    rec->setMaxCtr (2);
-    procList.append (rec);
-    procList.append (new CSignalAbsBiasRemover (p));
-    procList.append (new CSignalRectifier (p));
-    auto max = new CSignalGetMax (p);
-    procList.append (max);
-
-    connect (max, &signal::CSignalGetMax::maxValue,
-             this, &CSignalProcessingPrivate::setMaxValue);
-
-}
-
-CSignalProcessingPrivate::~CSignalProcessingPrivate()
-{
-    foreach (auto s, procList)
-    {
-        delete s;
-    }
-}
-
 void CSignalProcessingPrivate::process (data_t &data)
 {
     // calibrateing mode
@@ -137,4 +139,16 @@ void CSignalProcessingPrivate::setCalibrating (bool isCalibrating)
 void CSignalProcessingPrivate::setMaxValue (QVector3D val)
 {
     m_maxValue = val;
+}
+
+int CSignalProcessingPrivate::maxIntervallBeforeWriteToFile() const
+{
+    return m_maxIntervallBeforeWriteToFile;
+}
+
+void CSignalProcessingPrivate::setMaxIntervallBeforeWriteToFile (
+    int maxIntervallBeforeWriteToFile)
+{
+    m_maxIntervallBeforeWriteToFile = maxIntervallBeforeWriteToFile;
+    rec->setMaxCtr (this->maxIntervallBeforeWriteToFile());
 }

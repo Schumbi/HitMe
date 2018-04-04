@@ -24,6 +24,8 @@ public:
     double conversionFactor() const;
     void setConversionFactor ( double conversionFactor );
 
+    void setmaxIntervall (int intervall);
+
     QVector3D bias();
     QVector3D maxValue();
 

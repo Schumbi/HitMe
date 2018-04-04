@@ -5,20 +5,21 @@
 #include <QObject>
 #include <QList>
 
-namespace signal
-{
+namespace signal {
 
 class CSignalProcessing;
 class CAbstractProcessor;
+class CSignalMaxRecorder;
 
-class CSignalProcessingPrivate final : public QObject
-{
+class CSignalProcessingPrivate final : public QObject {
 
     Q_OBJECT
 
     static constexpr int maxTempStorage = 5000;
 
     const CSignalProcessing *p;
+    // signal recorder
+    CSignalMaxRecorder* rec;
     // biases
     QVector3D m_bias;
     // state of calibration
@@ -30,6 +31,8 @@ class CSignalProcessingPrivate final : public QObject
     void calibrate ( const data_t &data );
     double m_conversionFactor;
     QList<CAbstractProcessor *> procList;
+
+    int m_maxIntervallBeforeWriteToFile;
 
 public:
     explicit CSignalProcessingPrivate ( CSignalProcessing *p );
@@ -44,6 +47,9 @@ public:
 
     double conversionFactor() const;
     void setConversionFactor ( double conversionFactor );
+
+    int maxIntervallBeforeWriteToFile() const;
+    void setMaxIntervallBeforeWriteToFile (int maxIntervallBeforeWriteToFile);
 
 public slots:
     // control calibration state
