@@ -42,7 +42,8 @@ SOURCES += \
     signal/processor/csignalrectifier.cpp \
     signal/cabstractprocessor.cpp \
     signal/processor/csignalgetmax.cpp \
-    signal/processor/csignalmaxrecorder.cpp
+    signal/processor/csignalmaxrecorder.cpp \
+    signal/processor/interpolation.cpp
 
 HEADERS += \
     gui/hitmemainwindow.h \
@@ -59,7 +60,8 @@ HEADERS += \
     signal/processor/csignalrectifier.h \
     signal/cabstractprocessor.h \
     signal/processor/csignalgetmax.h \
-    signal/processor/csignalmaxrecorder.h
+    signal/processor/csignalmaxrecorder.h \
+    signal/processor/interpolation.h
 
 FORMS += \
     forms/hitmemainwindow.ui
