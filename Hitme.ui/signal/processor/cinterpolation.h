@@ -5,11 +5,11 @@
 
 class Interpolation_impl;
 
-class Interpolation {
+class CInterpolation {
 
 public:
-    Interpolation (QPointF p1, QPointF p2, QPointF p3, QPointF p4);
-    virtual ~Interpolation();
+    CInterpolation (QPointF p1, QPointF p2, QPointF p3, QPointF p4);
+    virtual ~CInterpolation();
 
     double y (double x);
 

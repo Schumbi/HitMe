@@ -1,7 +1,7 @@
 #include<QPointF>
 #include <cmath>
 
-#include "interpolation.h"
+#include "cinterpolation.h"
 
 class Interpolation_impl {
     /* calculated with maxima
@@ -212,16 +212,17 @@ public:
     }
 };
 
-Interpolation::Interpolation (QPointF p1, QPointF p2, QPointF p3, QPointF p4) :
+CInterpolation::CInterpolation (QPointF p1, QPointF p2, QPointF p3,
+                                QPointF p4) :
     d (new Interpolation_impl (p1, p2, p3, p4))
 { }
 
-Interpolation::~Interpolation()
+CInterpolation::~CInterpolation()
 {
     delete d;
 }
 
-double Interpolation::y (double x)
+double CInterpolation::y (double x)
 {
     return d->y (x);
 }
