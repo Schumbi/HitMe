@@ -226,3 +226,13 @@ double CInterpolation::y (double x)
 {
     return d->y (x);
 }
+
+QString CInterpolation::deb_print()
+{
+    QString res = QString ("y(x) = %1 * x^3 + %2 x^2 + %3 x + %4")
+                  .arg (d->a)
+                  .arg (d->b)
+                  .arg (d->c)
+                  .arg (d->d);
+    return res;
+}

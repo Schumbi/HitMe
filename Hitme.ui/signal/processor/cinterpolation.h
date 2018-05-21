@@ -2,6 +2,7 @@
 #define INTERPOLATION_H
 
 #include <QPointF>
+#include <QString>
 
 class Interpolation_impl;
 
@@ -12,6 +13,8 @@ public:
     virtual ~CInterpolation();
 
     double y (double x);
+
+    QString deb_print();
 
 private:
     Interpolation_impl *d;
