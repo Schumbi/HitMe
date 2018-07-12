@@ -66,8 +66,7 @@ unsigned int CAccStorage::getPCtrDiff() const
     return m_pCtrDiff;
 }
 
-void CAccStorage::processNewData (const CSensorData
-                                  &newdata)
+void CAccStorage::processNewData (const CSensorData &newdata)
 {
     if (m_packetCtr == 0 || newdata.id() == 0)
     {
@@ -117,17 +116,47 @@ void CAccStorage::processNewData (const CSensorData
 
     for (int ctr = 0; ctr < total; ctr++)
     {
+        // remove any data that is too long from front of vector
         if (static_cast<unsigned int> (m_storage.size())
-                >=
-                m_maxmeasurementSamples)
+                >= m_maxmeasurementSamples)
         {
             int diff = m_storage.size() -
                        m_maxmeasurementSamples;
             m_storage.remove (0, diff);
         }
 
+        // add time stamp to new accelaration data
         QVector4D datum (newdata[ctr], start + (period * ctr));
+        // add data to internal storage
         m_storage.append (datum);
+    }
+
+    /* hier müsste nun eigentlich die Interpolation rein
+     *
+     * 1. Letzte Daten holen
+     * 2. diese auf max für alle Kanäle untersuchen
+     * 3. wird max gefunden p1 und p2 bestimmen (p1x = maxx - 2, p2x = maxx - 1)
+     * 4. nach max gucken, wann der Wert wieder ruter geht
+     * 4a. Wert befindet sich noch in diesem Durchlauf
+     * - dann Punkte p3 und p4 bestimmen
+     * 4b. Wert befindet sich im nächsten Paket
+     * - dann Zustand merken
+     * - wenn nächstes Paket kommt, ersten Wert in diesem Suchen, wo Wert
+     * kleiner Max dann hier Punkte3 und Punkt4 bestimmen
+     * 5. Funktion erstellen
+     * 6. Zwischenwerte errechnen für alle Maxx-Werte und im Vector ersetzen
+    */
+
+    // 1.
+    for (int ctr = total; ctr > 0; ctr--)
+    {
+        QVector4D c = m_storage[m_storage.size() - ctr];
+
+        if (c.x() >= 512)
+        {
+            hier mach irgendwa.., wie oben beschrieben
+        }
+
     }
 
     // qDebug() << *this;

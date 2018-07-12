@@ -1,7 +1,7 @@
 #include<QPointF>
 #include <cmath>
 
-#include "cinterpolation.h"
+#include "ccubicfunctionsolver.h"
 
 class Interpolation_impl {
     /* calculated with maxima
@@ -212,22 +212,22 @@ public:
     }
 };
 
-CInterpolation::CInterpolation (QPointF p1, QPointF p2, QPointF p3,
-                                QPointF p4) :
+CCubicFunctionSolver::CCubicFunctionSolver (QPointF p1, QPointF p2, QPointF p3,
+        QPointF p4) :
     d (new Interpolation_impl (p1, p2, p3, p4))
 { }
 
-CInterpolation::~CInterpolation()
+CCubicFunctionSolver::~CCubicFunctionSolver()
 {
     delete d;
 }
 
-double CInterpolation::y (double x)
+double CCubicFunctionSolver::y (double x)
 {
     return d->y (x);
 }
 
-QString CInterpolation::deb_print()
+QString CCubicFunctionSolver::deb_print()
 {
     QString res = QString ("y(x) = %1 * x^3 + %2 x^2 + %3 x + %4")
                   .arg (d->a)

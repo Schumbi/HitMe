@@ -46,7 +46,7 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
 
     // ui update
     updateTimer.setInterval (0);
-    valuesToShow = 15000;
+    valuesToShow = 5000;
     updateTimer.start();
     ui->spinBox_duration->setValue (valuesToShow / 1000);
     ui->spinBox_duration->setMaximum (

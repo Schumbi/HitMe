@@ -8,7 +8,7 @@ quint32 CSensorData::startTime() const
     return m_startTime;
 }
 
-void CSensorData::setEndTimestamp(const quint32 &time)
+void CSensorData::setEndTimestamp (const quint32 &time)
 {
     m_endTime = time;
 }
@@ -18,7 +18,7 @@ quint32 CSensorData::endTime() const
     return m_endTime;
 }
 
-void CSensorData::setId(const quint32 &id)
+void CSensorData::setId (const quint32 &id)
 {
     m_id = id;
 }
@@ -29,17 +29,16 @@ quint32 CSensorData::id() const
 }
 
 CSensorData::CSensorData()
-    : QList<QVector3D> (), m_startTime(0)
-{
-}
+    : QList<QVector3D> (), m_startTime (0)
+{}
 
-CSensorData::CSensorData(const CSensorData &other)
+CSensorData::CSensorData (const CSensorData &other)
     : QList<QVector3D> (other)
 {
     m_startTime = other.m_startTime;
 }
 
-void CSensorData::setStartTimestamp(const quint32 &startTime)
+void CSensorData::setStartTimestamp (const quint32 &startTime)
 {
     m_startTime = startTime;
 }

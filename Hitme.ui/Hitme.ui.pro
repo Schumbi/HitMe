@@ -43,7 +43,7 @@ SOURCES += \
     signal/cabstractprocessor.cpp \
     signal/processor/csignalgetmax.cpp \
     signal/processor/csignalmaxrecorder.cpp \
-    signal/processor/cinterpolation.cpp
+    signal/processor/ccubicfunctionsolver.cpp
 
 HEADERS += \
     gui/hitmemainwindow.h \
@@ -61,7 +61,7 @@ HEADERS += \
     signal/cabstractprocessor.h \
     signal/processor/csignalgetmax.h \
     signal/processor/csignalmaxrecorder.h \
-    signal/processor/cinterpolation.h
+    signal/processor/ccubicfunctionsolver.h
 
 FORMS += \
     forms/hitmemainwindow.ui

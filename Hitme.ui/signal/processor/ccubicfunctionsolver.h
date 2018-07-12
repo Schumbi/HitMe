@@ -6,11 +6,11 @@
 
 class Interpolation_impl;
 
-class CInterpolation {
+class CCubicFunctionSolver {
 
 public:
-    CInterpolation (QPointF p1, QPointF p2, QPointF p3, QPointF p4);
-    virtual ~CInterpolation();
+    CCubicFunctionSolver (QPointF p1, QPointF p2, QPointF p3, QPointF p4);
+    virtual ~CCubicFunctionSolver();
 
     double y (double x);
 
