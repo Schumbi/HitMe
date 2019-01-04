@@ -26,7 +26,7 @@ HitmeMainWindow::HitmeMainWindow (QWidget *parent) :
     ui->pushButton_startstop->setText (QString ("Start"));
 
     m_sensor1 = new sensor::CSensor (sensor::CSensorConfig (
-                                         QString ("192.168.1.7")), this);
+                                         QString ("192.168.1.10")), this);
 
     m_sigCalc = new signal::CSignalProcessing (this);
     m_sensor1->setStarted (false);

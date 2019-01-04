@@ -154,7 +154,7 @@ void CAccStorage::processNewData (const CSensorData &newdata)
 
         if (c.x() >= 512)
         {
-            hier mach irgendwa.., wie oben beschrieben
+            //hier mach irgendwa.., wie oben beschrieben
         }
 
     }
