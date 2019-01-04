@@ -4,3 +4,6 @@
 [submodule "testing/generator"]
 	path = testing/generator
 	url = ssh://schumbi@schumbi.de/home/schumbi/repo/generator.git
+[submodule "HitMe.network"]
+	path = HitMe.network
+	url = git@github.com:Schumbi/HitMe.network.git
