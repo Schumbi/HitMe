@@ -1,0 +1,9 @@
+[submodule "HitMe.network"]
+	path = HitMe.network
+	url = git@github.com:Schumbi/HitMe.network.git
+[submodule "esp8266/HitMe.BMA020Fakor"]
+	path = esp8266/HitMe.BMA020Fakor
+	url = git@github.com:Schumbi/HitMe.BMA020Fakor.git
+[submodule "esp8266/HitMe.sensor"]
+	path = esp8266/HitMe.sensor
+	url = git@github.com:Schumbi/HitMe.esp8266.git
