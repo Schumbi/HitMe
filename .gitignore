@@ -1,0 +1,6 @@
+.vs/
+HitMe.Console/bin/
+HitMe.Console/obj/HitMe.Console.csproj.nuget.dgspec.json
+HitMe.Console/obj/
+HitMeTest/obj/
+HitMeTest/bin/
