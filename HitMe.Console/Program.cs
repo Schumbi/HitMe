@@ -2,7 +2,10 @@
 
 Console.WriteLine("Hello, World!");
 
-Net runner = new();
-await runner.RunCtrlUpdate();
+DeviceController runner = new(System.Net.IPEndPoint.Parse("10.8.1.228:10001"));
+runner.Start();
+Console.ReadKey();
+runner.Stop();
+Console.WriteLine($"Controller is running {runner.Running}");
 
 Console.ReadKey();
