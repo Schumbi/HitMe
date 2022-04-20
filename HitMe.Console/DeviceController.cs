@@ -15,11 +15,6 @@
         private const int _defaultCtrlPort = 10001; // HITME_CTRLPORT (in and out)
 
         /// <summary>
-        /// Device ip adress.
-        /// </summary>
-        private readonly IPEndPoint _ipe;
-
-        /// <summary>
         ///  Field for the task.
         /// </summary>
         private Task _ctrlTask = Task.CompletedTask;
@@ -34,8 +29,7 @@
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="ipe">IP info to use.</param>
-        public DeviceController(IPEndPoint ipe) => _ipe = ipe;
+        public DeviceController() { }
 
         /// <summary>
         /// Is task running?
@@ -43,23 +37,31 @@
         public bool Running => _ctrlTask.Status == TaskStatus.Running;
 
         /// <summary>
+        /// Device ip adress and port.
+        /// </summary>
+        public IPEndPoint Ipe { get; init; } = new IPEndPoint(IPAddress.None, _defaultCtrlPort);
+
+        /// <summary>
         /// Start the control task.
         /// </summary>
         public void Start()
         {
-            _ctrlTask = Task.Run(() =>
-           {
-               using var udpClient = new UdpClient(_ipe.Port);
-               while (run)
+            if (_ctrlTask.Status != TaskStatus.Running)
+            {
+                _ctrlTask = Task.Run(() =>
                {
-                   IPEndPoint ep = _ipe;
-                   byte[]? data = udpClient.Receive(ref ep);
-                   if (_ipe.Equals(ep))
+                   using var udpClient = new UdpClient(Ipe.Port);
+                   while (run)
                    {
-                       Console.WriteLine($"{ep.Address}:{ep.Port} {UTF8Encoding.UTF8.GetString(data)}");
+                       IPEndPoint ep = Ipe;
+                       byte[]? data = udpClient.Receive(ref ep);
+                       if (Ipe.Equals(ep))
+                       {
+                           Console.WriteLine($"{ep.Address}:{ep.Port} {UTF8Encoding.UTF8.GetString(data)}");
+                       }
                    }
-               }
-           });
+               });
+            }
         }
 
         /// <summary>
@@ -67,11 +69,14 @@
         /// </summary>
         public void Stop()
         {
-            run = false;
-            if (!_ctrlTask.Wait(_taskKillTimeout_ms))
+            if (_ctrlTask.Status == TaskStatus.Running)
             {
-                _ctrlTask.Dispose();
-                _ctrlTask = Task.CompletedTask;
+                run = false;
+                if (!_ctrlTask.Wait(_taskKillTimeout_ms))
+                {
+                    _ctrlTask.Dispose();
+                    _ctrlTask = Task.CompletedTask;
+                }
             }
         }
     }

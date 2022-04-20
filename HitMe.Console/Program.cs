@@ -2,7 +2,11 @@
 
 Console.WriteLine("Hello, World!");
 
-DeviceController runner = new(System.Net.IPEndPoint.Parse("10.8.1.228:10001"));
+DeviceController runner = new()
+{
+    Ipe = System.Net.IPEndPoint.Parse("10.8.1.228:10001"),
+};
+
 runner.Start();
 Console.ReadKey();
 runner.Stop();
