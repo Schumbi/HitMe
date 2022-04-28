@@ -6,7 +6,7 @@
 
     using HitMe.Types;
 
-    public class DeviceController
+    public class DeviceStatusListener
     {
         /// <summary>
         /// Default stop timeout for the task.
@@ -66,8 +66,6 @@
 
                                 Console.WriteLine($"{ep.Address}:{ep.Port} {jdata}");
                             }
-
-                            //Console.WriteLine($"{ep.Address}:{ep.Port} {Encoding.UTF8.GetString(data)}");
                         }
                     }
                 });

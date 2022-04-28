@@ -3,7 +3,7 @@ using HitMe.Device;
 
 Console.WriteLine("### HitMe Console ###");
 
-DeviceController runner = new()
+DeviceStatusListener runner = new()
 {
     Ipe = System.Net.IPEndPoint.Parse("10.8.1.228:10001"),
 };
