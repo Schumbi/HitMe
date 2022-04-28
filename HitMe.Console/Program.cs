@@ -1,7 +1,7 @@
 ﻿
 using HitMe.Device;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("### HitMe Console ###");
 
 DeviceController runner = new()
 {
