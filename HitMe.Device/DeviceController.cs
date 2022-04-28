@@ -1,44 +1,84 @@
 ﻿namespace HitMe.Device
 {
-    using System;
     using System.Net;
     using System.Net.Sockets;
     using System.Text;
-    using System.Threading.Tasks;
 
-    internal class DeviceController
+    using HitMe.Types;
+
+    public class DeviceController
     {
-        private const int ctrlPort = 10001; // HITME_CTRLPORT (in and out)
-        
+        private const int _taskKillTimeout_ms = 2000;
 
-        private readonly IPAddress _ip;
+        private const int _defaultCtrlPort = 10001; // HITME_CTRLPORT (in and out)
 
-        private bool _run = false;
+        /// <summary>
+        ///  Field for the task.
+        /// </summary>
+        private Task _ctrlTask = Task.CompletedTask;
 
-        public DeviceController(IPAddress ip) => _ip = ip;
+        private bool run = true;
 
-        public async Task StartController()
+        /// <summary>
+        /// Port to user for control communication.
+        /// </summary>
+        public int CtrlPort { get; init; } = _defaultCtrlPort;
+
+        /// <summary>
+        /// Is task running?
+        /// </summary>
+        public bool Running => _ctrlTask.Status == TaskStatus.Running;
+
+        /// <summary>
+        /// Device ip adress and port.
+        /// </summary>
+        public IPEndPoint Ipe { get; init; } = new IPEndPoint(IPAddress.None, _defaultCtrlPort);
+
+        /// <summary>
+        /// Start the control task.
+        /// </summary>
+        public void Start()
         {
-
-            await Task.Run(() =>
+            if (_ctrlTask.Status != TaskStatus.Running)
             {
-                using var udpClient = new UdpClient(ctrlPort);
-                while (_run)
+                _ctrlTask = Task.Run(() =>
                 {
-
-                    IPEndPoint? ep = new(_ip, ctrlPort);
-                    if (ep.Address == _ip)
+                    using var udpClient = new UdpClient(Ipe.Port);
+                    while (run)
                     {
+                        IPEndPoint ep = Ipe;
                         byte[]? data = udpClient.Receive(ref ep);
-                        Console.WriteLine($"{ep.Address}:{ep.Port} {UTF8Encoding.UTF8.GetString(data)}");
+
+                        if (Ipe.Equals(ep))
+                        {
+                            if (data != null)
+                            {
+                                var jdata = JsonDeviceStatusMessage.FromJson(Encoding.UTF8.GetString(data));
+
+                                Console.WriteLine($"{ep.Address}:{ep.Port} {jdata}");
+                            }
+
+                            //Console.WriteLine($"{ep.Address}:{ep.Port} {Encoding.UTF8.GetString(data)}");
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         /// <summary>
-        /// Is contoller running?
+        /// Stops controll task.
         /// </summary>
-        public bool Running => _run;
+        public void Stop()
+        {
+            if (_ctrlTask.Status == TaskStatus.Running)
+            {
+                run = false;
+                if (!_ctrlTask.Wait(_taskKillTimeout_ms))
+                {
+                    _ctrlTask.Dispose();
+                    _ctrlTask = Task.CompletedTask;
+                }
+            }
+        }
     }
 }

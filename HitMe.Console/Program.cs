@@ -1,4 +1,5 @@
-﻿using HitMe.Console;
+﻿
+using HitMe.Device;
 
 Console.WriteLine("Hello, World!");
 

@@ -7,9 +7,6 @@
     public class Device : IDevice
     {
 
-
-
-
         public Task<DeviceNetConfig> ConfigureNet(DeviceNetConfig config)
         {
             throw new NotImplementedException();
