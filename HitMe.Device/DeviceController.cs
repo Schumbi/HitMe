@@ -8,8 +8,14 @@
 
     public class DeviceController
     {
+        /// <summary>
+        /// Default stop timeout for the task.
+        /// </summary>
         private const int _taskKillTimeout_ms = 2000;
 
+        /// <summary>
+        /// Default hitme port for control messages.
+        /// </summary>
         private const int _defaultCtrlPort = 10001; // HITME_CTRLPORT (in and out)
 
         /// <summary>
@@ -17,6 +23,9 @@
         /// </summary>
         private Task _ctrlTask = Task.CompletedTask;
 
+        /// <summary>
+        /// Variable to stop the thread.
+        /// </summary>
         private bool run = true;
 
         /// <summary>
