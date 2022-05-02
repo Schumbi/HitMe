@@ -6,13 +6,26 @@
 
     public class Device : IDevice
     {
+        private DeviceStatusListener _statusListener;
+
 
         public Task<DeviceNetConfig> ConfigureNet(DeviceNetConfig config)
         {
+            if(_statusListener.Running)
+            {
+                _statusListener.Stop();
+            }
+
+            _statusListener = new DeviceStatusListener()
+            {
+                Ipe = System.Net.IPEndPoint.Parse($"{config.DeviceIP}:{config.DeviceCtrlPort}"),
+            };
+
             throw new NotImplementedException();
+
         }
 
-        public Task<DeviceNetConfig> GetDeviceConfig()
+        public Task<DeviceNetConfig> GetDeviceNetConfig()
         {
             throw new NotImplementedException();
         }

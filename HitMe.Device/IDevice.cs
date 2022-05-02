@@ -16,7 +16,7 @@
         /// <summary>
         /// Current configuration of the device.
         /// </summary>
-        public Task<DeviceNetConfig> GetDeviceConfig();
+        public Task<DeviceNetConfig> GetDeviceNetConfig();
 
         /// <summary>
         /// Start measurement.
