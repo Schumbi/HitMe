@@ -8,6 +8,7 @@ namespace HitMeTest
 
     using HitMe.Device;
     using HitMe.Types;
+    using HitMe.Types.Device;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,20 +21,25 @@ namespace HitMeTest
 
             var device = A.Fake<IDevice>();
 
-            DeviceNetConfig netConfig = new();
+            DeviceConfig netConfig = new(new(), DeviceMeasurementConfig.Default);
 
-            _ = A.CallTo(() => device.ConfigureNet(netConfig))
+            _ = A.CallTo(() => device.Configure(netConfig))
                 .Returns(
-                Task.FromResult(new DeviceNetConfig
-                { 
-                    DeviceCtrlPort = netConfig.DeviceCtrlPort,
-                    DeviceDataPort = netConfig.DeviceDataPort,
-                    DeviceIP = netConfig.DeviceIP,
-                }));
+                Task.FromResult(new DeviceConfig
+                ( 
+                    new DeviceNetConfig()
+                    {
+                        DeviceCtrlPort = netConfig.Net.DeviceCtrlPort,
+                        DeviceDataPort = netConfig.Net.DeviceDataPort,
+                        DeviceIP = netConfig.Net.DeviceIP,
+                    },
+                    DeviceMeasurementConfig.Default
+
+                )));
 
 
-            DeviceNetConfig newNetConfig = await device.ConfigureNet(netConfig);
-
+            var newConfig = await device.Configure(netConfig);
+            var newNetConfig = newConfig.Net;
 
             _ = newNetConfig.Should().BeEquivalentTo(netConfig);
 
@@ -45,20 +51,23 @@ namespace HitMeTest
 
             var device = A.Fake<IDevice>();
 
-            DeviceNetConfig netConfig = new();
+            DeviceConfig netConfig = new(new(), DeviceMeasurementConfig.Default);
 
-            _ = A.CallTo(() => device.ConfigureNet(netConfig))
+            _ = A.CallTo(() => device.Configure(netConfig))
                 .Returns(
-                Task.FromResult(new DeviceNetConfig
-                {
-                    DeviceCtrlPort = netConfig.DeviceCtrlPort + 1,
-                    DeviceDataPort = netConfig.DeviceDataPort + 1,
+                Task.FromResult(new DeviceConfig
+                (
+                    new DeviceNetConfig() {
+                    DeviceCtrlPort = netConfig.Net.DeviceCtrlPort + 1,
+                    DeviceDataPort = netConfig.Net.DeviceDataPort + 1,
                     DeviceIP = System.Net.IPAddress.Any,
-                }));
+                    },
+                    DeviceMeasurementConfig.Default
+                )));
 
 
-            DeviceNetConfig newNetConfig = await device.ConfigureNet(netConfig);
-            _ = newNetConfig.Should().NotBeEquivalentTo(netConfig);
+            DeviceConfig newConfig = await device.Configure(netConfig);
+            _ = newConfig.Should().NotBeEquivalentTo(netConfig);
         }
     }
 }

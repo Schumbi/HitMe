@@ -3,29 +3,20 @@
     using System.Threading.Tasks;
 
     using HitMe.Types;
+    using HitMe.Types.Device;
+
+    using LanguageExt;
 
     public class Device : IDevice
     {
-        private DeviceStatusListener _statusListener;
+        private DeviceStatusListener _statusListener = new();
 
-
-        public Task<DeviceNetConfig> ConfigureNet(DeviceNetConfig config)
+        public Task<Option<DeviceConfig>> Configure(DeviceConfig config)
         {
-            if(_statusListener.Running)
-            {
-                _statusListener.Stop();
-            }
-
-            _statusListener = new DeviceStatusListener()
-            {
-                Ipe = System.Net.IPEndPoint.Parse($"{config.DeviceIP}:{config.DeviceCtrlPort}"),
-            };
-
             throw new NotImplementedException();
-
         }
 
-        public Task<DeviceNetConfig> GetDeviceNetConfig()
+        public Task<Option<DeviceConfig>> GetDeviceConfig()
         {
             throw new NotImplementedException();
         }
