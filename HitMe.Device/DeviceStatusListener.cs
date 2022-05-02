@@ -49,9 +49,7 @@
         public void Start()
         {
             run = true;
-            _last.Change += _last_Change;
-
-
+            _last.Change += Last_Change;
 
             if (_ctrlTask.Status != TaskStatus.Running)
             {
@@ -69,8 +67,18 @@
                             {
                                 var jdata = JsonDeviceStatusMessage.FromJson(Encoding.Latin1.GetString(data));
 
-                                _ = _last.Swap(x => new DeviceConfig(new DeviceNetConfig()
-                                { DeviceCtrlPort = Ipe.Port, DeviceIP = Ipe.Address }, new DeviceMeasurementConfig(jdata.Range, jdata.Bandwidth, jdata.Start)));
+                                _ = _last.Swap(x => new DeviceConfig(
+                                    new DeviceNetConfig() { 
+                                        DeviceCtrlPort = Ipe.Port,
+                                        DeviceIP = Ipe.Address 
+                                    }, 
+                                    new DeviceMeasurementConfig(
+                                        jdata.Range, 
+                                        jdata.Bandwidth,
+                                        jdata.Start))
+                                { 
+                                    RemoteTimeStamp_ms = jdata.TimeStamp_ms,
+                                });
                             }
                         }
                     }
@@ -78,7 +86,7 @@
             }
         }
 
-        private void _last_Change(Option<DeviceConfig> value)
+        private void Last_Change(Option<DeviceConfig> value)
         {
 
             var c = value.Match(
@@ -88,6 +96,7 @@
             var args = new DeviceStatusEventArgs()
             {
                 valid = value.IsSome,
+                RemoteTimeStamp_ms = c.RemoteTimeStamp_ms,
                 DeviceMeasurementConfig = c.Measurement,
                 DeviceNetConfig = (DeviceNetConfig)c.Net.Clone(),
             };
@@ -102,7 +111,7 @@
             if (_ctrlTask.Status == TaskStatus.Running)
             {
                 run = false;
-                _last.Change -= _last_Change;
+                _last.Change -= Last_Change;
 
                 _ = _last.Swap(x => Option<DeviceConfig>.None);
                 
@@ -115,17 +124,26 @@
             }
         }
 
-
+        /// <summary>
+        /// Configure device.
+        /// </summary>
+        /// <param name="newConfig">Configuration to use.</param>
         public void Configure(DeviceConfig newConfig)
         {
-            Stop();
-
+            bool running = this.Running;
+            
+            if(running)
+            {
+                 Stop();
+            }
+            
+            // configure
             {
                 using var udpClient = new UdpClient(Ipe.Port);
 
                 JsonDeviceStatusMessage msg = new ()
                 {
-                    Type = Types.Device.MessageType.REQUEST_MSG,
+                    Type = MessageType.REQUEST_MSG,
                     Bandwidth = newConfig.Measurement.Bandwidth,
                     Range = newConfig.Measurement.Range,
                     Start = newConfig.Measurement.Start,
@@ -166,6 +184,11 @@
         public record DeviceConfig(DeviceNetConfig Net, DeviceMeasurementConfig Measurement)
         {
             public static DeviceConfig Default => new (DeviceNetConfig.Default, DeviceMeasurementConfig.Default);
+
+            /// <summary>
+            /// Timestamp coming from controller.
+            /// </summary>
+            public int RemoteTimeStamp_ms { get; init; }
         }
         
     }

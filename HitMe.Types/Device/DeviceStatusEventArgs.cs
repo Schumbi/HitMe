@@ -5,6 +5,8 @@
     public class DeviceStatusEventArgs : EventArgs
     {
         public bool valid = false;
+
+        public int RemoteTimeStamp_ms = 0;
         
         public DeviceMeasurementConfig DeviceMeasurementConfig { get; set; } = DeviceMeasurementConfig.Default;
 

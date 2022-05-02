@@ -23,7 +23,7 @@ void HandleStatusUpdate(object? sender, DeviceStatusEventArgs args)
     if(args != null)
     {
         var c = args;
-        Console.WriteLine($"{c.DeviceNetConfig.DeviceIP}:{c.DeviceNetConfig.DeviceDataPort} =>  R: {c.DeviceMeasurementConfig.Range} B:{c.DeviceMeasurementConfig.Bandwidth} S: {c.DeviceMeasurementConfig.Start}");
+        Console.WriteLine($"{c.RemoteTimeStamp_ms}: {c.DeviceNetConfig.DeviceIP}:{c.DeviceNetConfig.DeviceCtrlPort} =>  R: {c.DeviceMeasurementConfig.Range} B:{c.DeviceMeasurementConfig.Bandwidth} S: {c.DeviceMeasurementConfig.Start}");
     }
 }
 
