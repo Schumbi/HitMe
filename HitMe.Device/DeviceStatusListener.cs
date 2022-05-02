@@ -9,6 +9,7 @@
 
     using LanguageExt;
 
+    using static HitMe.Types.Device.DeviceConfig;
     using static LanguageExt.Prelude;
 
     public class DeviceStatusListener

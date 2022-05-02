@@ -6,6 +6,7 @@ using HitMe.Types.Device;
 using LanguageExt;
 
 using static HitMe.Device.DeviceStatusListener;
+using static HitMe.Types.Device.DeviceConfig;
 using static LanguageExt.Prelude;
 
 Console.WriteLine("### HitMe Console ###");

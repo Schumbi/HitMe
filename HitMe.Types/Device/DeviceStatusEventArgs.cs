@@ -2,6 +2,8 @@
 {
     using System;
 
+    using static HitMe.Types.Device.DeviceConfig;
+
     public class DeviceStatusEventArgs : EventArgs
     {
         public bool valid = false;
