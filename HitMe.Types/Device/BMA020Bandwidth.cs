@@ -1,6 +1,6 @@
 ﻿namespace HitMe.Types.Device
 {
-    public enum BMA020BANDWIDTH
+    public enum BMA020Bandwidth
     {
         /// <summary>
         /// Sampling freq: ~25Hz

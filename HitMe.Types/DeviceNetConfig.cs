@@ -2,7 +2,7 @@
 {
     using System.Net;
 
-    public class DeviceNetConfig
+    public class DeviceNetConfig : ICloneable
     {
 
         /// <summary>
@@ -20,5 +20,19 @@
         /// </summary>
         public int DeviceDataPort { get; init; } = 10000;
 
+        /// <summary>
+        /// Default type.
+        /// </summary>
+        public static DeviceNetConfig Default => new ();
+
+        public object Clone()
+        {
+            return new DeviceNetConfig()
+            {
+                DeviceIP = DeviceIP,
+                DeviceCtrlPort = DeviceCtrlPort,
+                DeviceDataPort = DeviceDataPort
+            };
+        }
     }
 }
