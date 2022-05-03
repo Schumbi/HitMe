@@ -10,7 +10,11 @@ namespace HitMeTest
     using HitMe.Types;
     using HitMe.Types.Device;
 
+    using LanguageExt;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using static HitMe.Types.Device.DeviceConfig;
 
     [TestClass]
     public class DeviceTest
@@ -25,7 +29,7 @@ namespace HitMeTest
 
             _ = A.CallTo(() => device.Configure(netConfig))
                 .Returns(
-                Task.FromResult(new DeviceConfig
+                Task.FromResult(Option<DeviceConfig>.Some(new DeviceConfig
                 ( 
                     new DeviceNetConfig()
                     {
@@ -35,13 +39,13 @@ namespace HitMeTest
                     },
                     DeviceMeasurementConfig.Default
 
-                )));
+                ))));
 
 
             var newConfig = await device.Configure(netConfig);
-            var newNetConfig = newConfig.Net;
-
-            _ = newNetConfig.Should().BeEquivalentTo(netConfig);
+            _ = newConfig.Match(
+                Some: some => _ = some.Should().BeEquivalentTo(netConfig),
+                None: () => Assert.Fail("Should be some!"));
 
         }
 
@@ -55,7 +59,7 @@ namespace HitMeTest
 
             _ = A.CallTo(() => device.Configure(netConfig))
                 .Returns(
-                Task.FromResult(new DeviceConfig
+                Task.FromResult(Option<DeviceConfig>.Some(new DeviceConfig
                 (
                     new DeviceNetConfig() {
                     DeviceCtrlPort = netConfig.Net.DeviceCtrlPort + 1,
@@ -63,11 +67,13 @@ namespace HitMeTest
                     DeviceIP = System.Net.IPAddress.Any,
                     },
                     DeviceMeasurementConfig.Default
-                )));
+                ))));
 
 
-            DeviceConfig newConfig = await device.Configure(netConfig);
-            _ = newConfig.Should().NotBeEquivalentTo(netConfig);
+            var newConfig = await device.Configure(netConfig);
+            _ = newConfig.Match(
+                Some: c => c.Should().NotBeEquivalentTo(netConfig),
+                None: () => Assert.Fail("Should be some!"));
         }
     }
 }
