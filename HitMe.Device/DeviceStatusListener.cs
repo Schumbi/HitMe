@@ -60,7 +60,7 @@
                     while (run)
                     {
                         IPEndPoint ep = Ipe;
-                         byte[]? data = udpClient.Receive(ref ep);
+                        byte[]? data = udpClient.Receive(ref ep);
 
                         if (Ipe.Equals(ep))
                         {
@@ -68,16 +68,18 @@
                             {
                                 var jdata = JsonDeviceStatusMessage.FromJson(Encoding.Latin1.GetString(data));
 
-                                _ = _last.Swap(x => new DeviceConfig(
-                                    new DeviceNetConfig() { 
+                                _ = _last.Swap(x =>
+                                new DeviceConfig(
+                                    new DeviceNetConfig()
+                                    {
                                         DeviceCtrlPort = Ipe.Port,
-                                        DeviceIP = Ipe.Address 
-                                    }, 
+                                        DeviceIP = Ipe.Address
+                                    },
                                     new DeviceMeasurementConfig(
-                                        jdata.Range, 
+                                        jdata.Range,
                                         jdata.Bandwidth,
                                         jdata.Start))
-                                { 
+                                {
                                     RemoteTimeStamp_ms = jdata.TimeStamp_ms,
                                 });
                             }
@@ -115,7 +117,7 @@
                 _last.Change -= Last_Change;
 
                 _ = _last.Swap(x => Option<DeviceConfig>.None);
-                
+
                 if (!_ctrlTask.Wait(_taskKillTimeout_ms))
                 {
                     _ctrlTask.Dispose();
@@ -132,31 +134,31 @@
         public void Configure(DeviceConfig newConfig)
         {
             bool running = this.Running;
-            
-            if(running)
+
+            if (running)
             {
-                 Stop();
+                Stop();
             }
-            
+
             // configure
             {
                 using var udpClient = new UdpClient(Ipe.Port);
 
-                JsonDeviceStatusMessage msg = new ()
+                JsonDeviceStatusMessage msg = new()
                 {
                     Type = MessageType.REQUEST_MSG,
                     Bandwidth = newConfig.Measurement.Bandwidth,
                     Range = newConfig.Measurement.Range,
                     Start = newConfig.Measurement.Start,
                 };
-                
+
                 byte[] data = Encoding.Latin1.GetBytes(JsonDeviceStatusMessage.ToJson(msg));
                 _ = udpClient.Send(data, data.Length, Ipe);
             }
 
             Start();
         }
-        
+
 
         /// <summary>
         /// Last config state.
@@ -169,13 +171,13 @@
         /// <returns>Last config.</returns>
         public Option<DeviceConfig> GetLastConfig() => _last.Value;
 
-        
+
         /// <summary>
         /// Emitted on changes.
         /// </summary>
         public event EventHandler<DeviceStatusEventArgs> StatusChangedEvent;
 
         protected virtual void OnStatusChangedEvent(DeviceStatusEventArgs e) => StatusChangedEvent?.Invoke(this, e);
-        
+
     }
 }

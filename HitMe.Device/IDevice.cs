@@ -16,7 +16,7 @@
         /// </summary>
         /// <param name="config">Config to use.</param>
         /// <returns>Set configuration of the device.</returns>
-        public Task<Option<DeviceConfig>> Configure(DeviceConfig config);
+        public Task<bool> Configure(DeviceConfig config);
 
         /// <summary>
         /// Current configuration of the device.
@@ -27,13 +27,13 @@
         /// Start measurement.
         /// </summary>
         /// <returns></returns>
-        public Task<bool> Start();
+        public bool Start();
 
         /// <summary>
         /// Stop measurement.
         /// </summary>
         /// <returns></returns>
-        public Task<bool> Stop();
+        public void Stop();
 
         /// <summary>
         /// Show state of connection.
