@@ -89,5 +89,15 @@
 
             return true;
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as DeviceConfig);
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
